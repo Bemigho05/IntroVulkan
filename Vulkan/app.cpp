@@ -48,7 +48,8 @@ void App::run()
 {
 	while (!glfwWindowShouldClose(window.get())) {
 		glfwPollEvents();
-
+		graphicsEngine->render();
+		graphicsEngine->present();
 		calculateFrameRate();
 	}
 }

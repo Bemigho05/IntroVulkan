@@ -16,7 +16,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find packages
-find_package(fmt CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
@@ -40,7 +39,6 @@ endif()
 target_link_libraries(Vulkan PRIVATE
     glfw
     glm::glm
-    fmt::fmt
     ${Vulkan_LIBRARY}  # Link directly to SDK library
 )
 

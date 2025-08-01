@@ -31,15 +31,45 @@ void Engine::createInstance() {
     uint32_t glfwExtensionCount = 0;
     const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-    // Prepare extensions list
-    std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
-    extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+    auto extensionProperties = context.enumerateInstanceExtensionProperties();
+
+    for (uint32_t i = 0; i < glfwExtensionCount; ++i) {
+        if (std::ranges::none_of(extensionProperties, [glfwExtension = glfwExtensions[i]](auto const& extensionProperty) {
+            return strcmp(extensionProperty.extensionName, glfwExtension) == 0;
+            })) {
+            throw std::runtime_error("Required GLFW extension not supported: " + std::string(glfwExtensions[i]));
+        }
+    }
+
+    auto extensions = std::vector<const char*>(glfwExtensions, glfwExtensions + glfwExtensionCount);
+    
+
+    const std::vector validationLayers = { "VK_LAYER_KHRONOS_validation" };
+
+
+    std::vector<char const*> requiredLayers;
+
+#ifdef NDEBUG
+#else
+    requiredLayers.assign(validationLayers.begin(), validationLayers.end());
+#endif // NDEBUG
+
+    
+    auto layerProperties = context.enumerateInstanceLayerProperties();
+    if (std::ranges::any_of(requiredLayers, [&layerProperties](auto const& requiredLayer) {
+        return std::ranges::none_of(layerProperties, [requiredLayer](auto const& layerProperty) {
+            return strcmp(layerProperty.layerName, requiredLayer) == 0;
+            });
+        })) {
+        throw std::runtime_error("One or more required layers are not supported!");
+    }
 
     vk::InstanceCreateInfo createInfo{
-        .flags = vk::InstanceCreateFlagBits::eEnumeratePortabilityKHR,
         .pApplicationInfo = &appInfo,
+        .enabledLayerCount = static_cast<uint32_t>(requiredLayers.size()),
+        .ppEnabledLayerNames = requiredLayers.data(),
         .enabledExtensionCount = static_cast<uint32_t>(extensions.size()),
-        .ppEnabledExtensionNames = extensions.data()
+        .ppEnabledExtensionNames = extensions.data(),
     };
 
     try {
@@ -48,4 +78,28 @@ void Engine::createInstance() {
     catch (const vk::SystemError& err) {
         throw std::runtime_error("Failed to create instance: " + std::string(err.what()));
     }
+}
+
+void Engine::setupDebugMessenger()
+{
+#ifdef NDEBUG
+    return;
+#else
+    vk::DebugUtilsMessageSeverityFlagsEXT severityFlags(vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose | vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning | vk::DebugUtilsMessageSeverityFlagBitsEXT::eError);
+    vk::DebugUtilsMessageTypeFlagsEXT messageTypeFlags(vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral | vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance | vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation);
+    vk::DebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXT{
+        .messageSeverity = severityFlags,
+        .messageType = messageTypeFlags,
+        .pfnUserCallback = &debugCallback
+    };
+    debugMessenger = instance->createDebugUtilsMessengerEXT(debugUtilsMessengerCreateInfoEXT);
+#endif // NDEBUG
+
+}
+
+VKAPI_ATTR vk::Bool32 VKAPI_CALL Engine::debugCallback(vk::DebugUtilsMessageSeverityFlagBitsEXT severity, vk::DebugUtilsMessageTypeFlagsEXT type, const vk::DebugUtilsMessengerCallbackDataEXT* pCallbackData, void*)
+{
+    std::cerr << "validation layer: type " << to_string(type) << " msg: " << pCallbackData->pMessage << std::endl;
+
+    return vk::False;
 }
