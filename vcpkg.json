@@ -1,9 +1,6 @@
 {
   "dependencies": [
     "glfw3",
-    "glm",
-    "fmt",
-    "vulkan",
-    "vulkan-memory-allocator"
+    "glm"
   ]
 }
