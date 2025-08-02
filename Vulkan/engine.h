@@ -15,6 +15,7 @@ private:
     void createSurface();
     void createSwapchain();
     void setupDevice();
+    void createImageViews();
 
 
     std::shared_ptr<GLFWwindow> window = nullptr;
@@ -32,7 +33,8 @@ private:
     uint32_t presentFamily;
     vk::raii::SwapchainKHR swapChain = nullptr;
     std::vector<vk::Image> swapChainImages;
+    std::vector<vk::raii::ImageView> swapChainImageViews;
     vk::Format swapChainImageFormat = vk::Format::eUndefined;
     vk::Extent2D swapChainExtent;
-    
+  
 };

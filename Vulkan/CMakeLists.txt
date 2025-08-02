@@ -1,8 +1,8 @@
 ﻿cmake_minimum_required(VERSION 3.15)
-project(Vulkan)
+project(IntroVulkan)
 
 # Add source files
-add_executable(Vulkan 
+add_executable(IntroVulkan 
     "main.cpp" 
     "config.h" 
     "app.cpp" 
@@ -10,7 +10,7 @@ add_executable(Vulkan
     "engine.h" 
     "engine.cpp"
     "vkInit/logging.h"
-  "vkInit/device.cpp" "vkInit/device.h"  "vkInit/swapchain.h" "vkInit/swapchain.cpp")
+  "vkInit/device.cpp" "vkInit/device.h"  "vkInit/swapchain.h" "vkInit/swapchain.cpp" "vkInit/image.cpp" "vkInit/image.h" "vkInit/pipeline.h" "vkInit/pipeline.cpp")
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
@@ -37,7 +37,7 @@ else()
 endif()
 
 # Link libraries
-target_link_libraries(Vulkan PRIVATE
+target_link_libraries(IntroVulkan PRIVATE
     glfw
     glm::glm
     ${Vulkan_LIBRARY}  # Link directly to SDK library
@@ -45,15 +45,15 @@ target_link_libraries(Vulkan PRIVATE
 
 # Add Vulkan shader compiler if found
 if(Vulkan_GLSL_COMPILER_FOUND)
-    target_link_libraries(Vulkan PRIVATE Vulkan::glslc)
+    target_link_libraries(IntroVulkan PRIVATE Vulkan::glslc)
 endif()
 
 # Add include directories from Vulkan SDK
-target_include_directories(Vulkan PRIVATE
+target_include_directories(IntroVulkan PRIVATE
     "$ENV{VULKAN_SDK}/Include"
 )
 
 # Add vcpkg include directories as well
-target_include_directories(Vulkan PRIVATE
+target_include_directories(IntroVulkan PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/x64-windows/include
 )

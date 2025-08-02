@@ -12,6 +12,7 @@ Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> 
     createSurface();
     setupDevice();
     createSwapchain();
+    createImageViews();
 }
 
 Engine::~Engine()
@@ -120,7 +121,6 @@ void Engine::createSwapchain()
     swapChain = std::move(_swapchain.swapchain);
     swapChainImageFormat = _swapchain.imageFormat;
     swapChainExtent = _swapchain.extent;
-
     swapChainImages = swapChain.getImages();
 }
 
@@ -137,4 +137,20 @@ void Engine::setupDevice()
     
     graphicsQueue = vk::raii::Queue(device, graphicsFamily, 0);
     presentQueue = vk::raii::Queue(device, presentFamily, 0);
+}
+
+void Engine::createImageViews()
+{
+    swapChainImageViews.clear();
+    vk::ImageViewCreateInfo imageViewCreateInfo{
+        .viewType = vk::ImageViewType::e2D,
+        .format = swapChainImageFormat,
+        .subresourceRange = { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1}
+    };
+
+    for (auto image : swapChainImages) { 
+        imageViewCreateInfo.image = image; 
+        swapChainImageViews.emplace_back(device, imageViewCreateInfo);
+    }
+   
 }
