@@ -9,7 +9,8 @@ add_executable(Vulkan
     "app.h" 
     "engine.h" 
     "engine.cpp"
-)
+    "vkInit/logging.h"
+  "vkInit/device.cpp" "vkInit/device.h" "vkInit/queueFamilies.h")
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)

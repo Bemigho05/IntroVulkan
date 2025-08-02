@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <ranges>
+#include <map>
 
 #define VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
 #include <vulkan/vulkan.hpp>

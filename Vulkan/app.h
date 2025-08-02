@@ -14,7 +14,6 @@ private:
 	float frameTime;
 
 	void initWindow(const int& width, const int& height);
-
 	void calculateFrameRate();
 
 public:
