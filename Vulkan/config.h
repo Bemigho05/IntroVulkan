@@ -8,6 +8,9 @@
 #include <sstream>
 #include <ranges>
 #include <map>
+#include <limits>
+#include <cstdint>
+
 
 #define VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
 #include <vulkan/vulkan.hpp>

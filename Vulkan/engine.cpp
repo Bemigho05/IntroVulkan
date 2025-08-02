@@ -1,14 +1,17 @@
 #include "engine.h"
+#include "vkInit/swapchain.h"
 #include "vkInit/device.h"
 #include "vkInit/logging.h"
 
 
 Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> window)
+    : window(window)
 {
     createInstance();
     setupDebugMessenger();
-    createSurface(window);
+    createSurface();
     setupDevice();
+    createSwapchain();
 }
 
 Engine::~Engine()
@@ -103,7 +106,7 @@ void Engine::setupDebugMessenger() {
    
 }
 
-void Engine::createSurface(std::shared_ptr<GLFWwindow> window)
+void Engine::createSurface()
 {
     VkSurfaceKHR _surface;
     if (glfwCreateWindowSurface(*instance, window.get(), nullptr, &_surface) != 0)
@@ -111,13 +114,57 @@ void Engine::createSurface(std::shared_ptr<GLFWwindow> window)
     surface = vk::raii::SurfaceKHR(instance, _surface);
 }
 
+void Engine::createSwapchain()
+{
+    auto surfaceCapabilities = physicalDevice.getSurfaceCapabilitiesKHR(surface);
+    auto swapChainSurfaceFormat = vkInit::chooseSwapSurfaceFormat(physicalDevice.getSurfaceFormatsKHR(surface));
+    auto swapChainExtent = vkInit::chooseSwapExtent(surfaceCapabilities, window);
+    auto minImageCount = std::max(3u, surfaceCapabilities.minImageCount);
+    minImageCount = (surfaceCapabilities.maxImageCount > 0 && minImageCount > surfaceCapabilities.maxImageCount) ? surfaceCapabilities.maxImageCount : minImageCount;
+
+    uint32_t imageCount = surfaceCapabilities.minImageCount + 1;
+
+    vk::SwapchainCreateInfoKHR swapChainCreateInfo{
+        .flags = vk::SwapchainCreateFlagsKHR(),
+        .surface = surface, .minImageCount = minImageCount,
+        .imageFormat = swapChainSurfaceFormat.format, .imageColorSpace = swapChainSurfaceFormat.colorSpace,
+        .imageExtent = swapChainExtent, .imageArrayLayers = 1,
+        .imageUsage = vk::ImageUsageFlagBits::eColorAttachment, .imageSharingMode = vk::SharingMode::eExclusive,
+        .preTransform = surfaceCapabilities.currentTransform, .compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque,
+        .presentMode = vkInit::choosePresentMode(physicalDevice.getSurfacePresentModesKHR(surface)),
+        .clipped = true, .oldSwapchain = nullptr,
+        
+    };
+
+    uint32_t queueFamilyIndices[] = { graphicsFamily, presentFamily };
+
+    if (graphicsFamily != presentFamily) {
+        swapChainCreateInfo.imageSharingMode = vk::SharingMode::eConcurrent;
+        swapChainCreateInfo.queueFamilyIndexCount = 2;
+        swapChainCreateInfo.pQueueFamilyIndices = queueFamilyIndices;
+    }
+    else {
+        swapChainCreateInfo.imageSharingMode = vk::SharingMode::eExclusive;
+        swapChainCreateInfo.queueFamilyIndexCount = 0;
+        swapChainCreateInfo.pQueueFamilyIndices = nullptr;
+    }
+
+    
+    swapChain = vk::raii::SwapchainKHR(device, swapChainCreateInfo);
+    swapChainImages = swapChain.getImages();
+}
+
 void Engine::setupDevice()
 {
     physicalDevice = vkInit::getPhysicalDevice(instance);
-    auto queueIndex = vkInit::getGraphicsIndex(physicalDevice, surface);
 
-    device = vkInit::createLogicalDevice(physicalDevice, queueIndex.graphicsIndex);
+    auto queueFamilyIndices = vkInit::getQueueFamilyIndices(physicalDevice, surface);
+
+    graphicsFamily = queueFamilyIndices.graphicsFamily;
+    presentFamily = queueFamilyIndices.presentFamily;
+
+    device = vkInit::createLogicalDevice(physicalDevice, queueFamilyIndices.graphicsFamily);
     
-    graphicsQueue = vk::raii::Queue(device, queueIndex.graphicsIndex, 0);
-    presentQueue = vk::raii::Queue(device, queueIndex.presentIndex, 0);
+    graphicsQueue = vk::raii::Queue(device, graphicsFamily, 0);
+    presentQueue = vk::raii::Queue(device, presentFamily, 0);
 }

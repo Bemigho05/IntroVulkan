@@ -12,8 +12,12 @@ public:
 private:
     void createInstance();
     void setupDebugMessenger();
-    void createSurface(std::shared_ptr<GLFWwindow> window);
+    void createSurface();
+    void createSwapchain();
     void setupDevice();
+
+
+    std::shared_ptr<GLFWwindow> window = nullptr;
 
     vk::raii::Context context; 
     vk::raii::Instance instance = nullptr;
@@ -23,6 +27,10 @@ private:
     vk::raii::PhysicalDevice physicalDevice = nullptr;
     vk::raii::Device device = nullptr;
     vk::raii::Queue graphicsQueue = nullptr;
+    uint32_t graphicsFamily;
     vk::raii::Queue presentQueue = nullptr;
+    uint32_t presentFamily;
+    vk::raii::SwapchainKHR swapChain = nullptr;
+    std::vector<vk::Image> swapChainImages;
     
 };

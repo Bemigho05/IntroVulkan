@@ -26,11 +26,11 @@ vk::raii::PhysicalDevice vkInit::getPhysicalDevice(const vk::raii::Instance& ins
     else { throw std::runtime_error("failed to find a suitable GPU!"); }
 }
 
-vk::raii::Device vkInit::createLogicalDevice(const vk::raii::PhysicalDevice& physicalDevice, uint32_t graphicsIndex)
+vk::raii::Device vkInit::createLogicalDevice(const vk::raii::PhysicalDevice& physicalDevice, uint32_t graphicsFamily)
 {
     float queuePriority = 0.0f;
     vk::DeviceQueueCreateInfo deviceQueueCreateInfo{
-        .queueFamilyIndex = graphicsIndex,
+        .queueFamilyIndex = graphicsFamily,
         .queueCount = 1,
         .pQueuePriorities = &queuePriority
     };
@@ -52,7 +52,7 @@ vk::raii::Device vkInit::createLogicalDevice(const vk::raii::PhysicalDevice& phy
     return vk::raii::Device(physicalDevice, deviceCreateInfo);
 }
 
-vkInit::queueIndex vkInit::getGraphicsIndex(const vk::raii::PhysicalDevice& physicalDevice, const vk::raii::SurfaceKHR& surface)
+vkInit::QueueFamilyIndices vkInit::getQueueFamilyIndices(const vk::raii::PhysicalDevice& physicalDevice, const vk::raii::SurfaceKHR& surface)
 {
     auto queueFamilyPropeties = physicalDevice.getQueueFamilyProperties();
     auto graphicsQueuFamilyProperty = std::ranges::find_if(queueFamilyPropeties, [](auto const& qfp) {
@@ -60,32 +60,32 @@ vkInit::queueIndex vkInit::getGraphicsIndex(const vk::raii::PhysicalDevice& phys
         });
     assert(graphicsQueuFamilyProperty != queueFamilyPropeties.end() && "No graphics queue family found!");
 
-    auto graphicsIndex =  static_cast<uint32_t>(std::distance(queueFamilyPropeties.begin(), graphicsQueuFamilyProperty));
+    auto graphicsFamily =  static_cast<uint32_t>(std::distance(queueFamilyPropeties.begin(), graphicsQueuFamilyProperty));
 
-    auto presentIndex = physicalDevice.getSurfaceSupportKHR(graphicsIndex, *surface) ? graphicsIndex : static_cast<uint32_t>(queueFamilyPropeties.size());
+    auto presentFamily = physicalDevice.getSurfaceSupportKHR(graphicsFamily, *surface) ? graphicsFamily : static_cast<uint32_t>(queueFamilyPropeties.size());
 
-    if (presentIndex == queueFamilyPropeties.size()) {
+    if (presentFamily == queueFamilyPropeties.size()) {
         for (size_t i = 0; i < queueFamilyPropeties.size(); i++) {
             if ((queueFamilyPropeties[i].queueFlags & vk::QueueFlagBits::eGraphics) &&
                 physicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(i), *surface)) {
-                graphicsIndex = static_cast<uint32_t>(i);
-                presentIndex = graphicsIndex;
+                graphicsFamily = static_cast<uint32_t>(i);
+                presentFamily = graphicsFamily;
                 break;
             }
         }
-        if (presentIndex == queueFamilyPropeties.size()) {
+        if (presentFamily == queueFamilyPropeties.size()) {
             for (size_t i = 0; i < queueFamilyPropeties.size(); i++) {
                 if (physicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(i), *surface)) {
-                    presentIndex = static_cast<uint32_t>(i);
+                    presentFamily = static_cast<uint32_t>(i);
                     break;
                 }
             }
         }
     }
-    if ((graphicsIndex == queueFamilyPropeties.size()) || (presentIndex == queueFamilyPropeties.size())) {
+    if ((graphicsFamily == queueFamilyPropeties.size()) || (presentFamily == queueFamilyPropeties.size())) {
         throw std::runtime_error("Could not find a queue for graphics or present -> terminating");
     }
-    return { graphicsIndex, presentIndex };
+    return { graphicsFamily, presentFamily };
 
 }
 

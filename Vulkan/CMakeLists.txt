@@ -10,7 +10,7 @@ add_executable(Vulkan
     "engine.h" 
     "engine.cpp"
     "vkInit/logging.h"
-  "vkInit/device.cpp" "vkInit/device.h" )
+  "vkInit/device.cpp" "vkInit/device.h"  "vkInit/swapchain.h" "vkInit/swapchain.cpp")
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
