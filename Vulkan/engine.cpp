@@ -116,41 +116,11 @@ void Engine::createSurface()
 
 void Engine::createSwapchain()
 {
-    auto surfaceCapabilities = physicalDevice.getSurfaceCapabilitiesKHR(surface);
-    auto swapChainSurfaceFormat = vkInit::chooseSwapSurfaceFormat(physicalDevice.getSurfaceFormatsKHR(surface));
-    auto swapChainExtent = vkInit::chooseSwapExtent(surfaceCapabilities, window);
-    auto minImageCount = std::max(3u, surfaceCapabilities.minImageCount);
-    minImageCount = (surfaceCapabilities.maxImageCount > 0 && minImageCount > surfaceCapabilities.maxImageCount) ? surfaceCapabilities.maxImageCount : minImageCount;
+    auto _swapchain = vkInit::createSwapchain(window, physicalDevice, device, surface);
+    swapChain = std::move(_swapchain.swapchain);
+    swapChainImageFormat = _swapchain.imageFormat;
+    swapChainExtent = _swapchain.extent;
 
-    uint32_t imageCount = surfaceCapabilities.minImageCount + 1;
-
-    vk::SwapchainCreateInfoKHR swapChainCreateInfo{
-        .flags = vk::SwapchainCreateFlagsKHR(),
-        .surface = surface, .minImageCount = minImageCount,
-        .imageFormat = swapChainSurfaceFormat.format, .imageColorSpace = swapChainSurfaceFormat.colorSpace,
-        .imageExtent = swapChainExtent, .imageArrayLayers = 1,
-        .imageUsage = vk::ImageUsageFlagBits::eColorAttachment, .imageSharingMode = vk::SharingMode::eExclusive,
-        .preTransform = surfaceCapabilities.currentTransform, .compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque,
-        .presentMode = vkInit::choosePresentMode(physicalDevice.getSurfacePresentModesKHR(surface)),
-        .clipped = true, .oldSwapchain = nullptr,
-        
-    };
-
-    uint32_t queueFamilyIndices[] = { graphicsFamily, presentFamily };
-
-    if (graphicsFamily != presentFamily) {
-        swapChainCreateInfo.imageSharingMode = vk::SharingMode::eConcurrent;
-        swapChainCreateInfo.queueFamilyIndexCount = 2;
-        swapChainCreateInfo.pQueueFamilyIndices = queueFamilyIndices;
-    }
-    else {
-        swapChainCreateInfo.imageSharingMode = vk::SharingMode::eExclusive;
-        swapChainCreateInfo.queueFamilyIndexCount = 0;
-        swapChainCreateInfo.pQueueFamilyIndices = nullptr;
-    }
-
-    
-    swapChain = vk::raii::SwapchainKHR(device, swapChainCreateInfo);
     swapChainImages = swapChain.getImages();
 }
 

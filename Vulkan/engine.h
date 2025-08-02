@@ -32,5 +32,7 @@ private:
     uint32_t presentFamily;
     vk::raii::SwapchainKHR swapChain = nullptr;
     std::vector<vk::Image> swapChainImages;
+    vk::Format swapChainImageFormat = vk::Format::eUndefined;
+    vk::Extent2D swapChainExtent;
     
 };
