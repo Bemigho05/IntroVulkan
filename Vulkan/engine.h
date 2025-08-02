@@ -12,13 +12,17 @@ public:
 private:
     void createInstance();
     void setupDebugMessenger();
+    void createSurface(std::shared_ptr<GLFWwindow> window);
     void setupDevice();
 
     vk::raii::Context context; 
     vk::raii::Instance instance = nullptr;
     vk::raii::DebugUtilsMessengerEXT debugMessenger = nullptr;
+    vk::raii::SurfaceKHR surface = nullptr;
 
     vk::raii::PhysicalDevice physicalDevice = nullptr;
     vk::raii::Device device = nullptr;
-    vk::raii::Queue graphicsQueue;
+    vk::raii::Queue graphicsQueue = nullptr;
+    vk::raii::Queue presentQueue = nullptr;
+    
 };

@@ -19,8 +19,6 @@ vk::raii::PhysicalDevice vkInit::getPhysicalDevice(const vk::raii::Instance& ins
             found = found && extensionIter != extensions.end();
         }
         isSuitable = isSuitable && found;
-        /*printf("\n");
-        if (isSuitable) { physicalDevice = device; }*/
         return isSuitable;
         });
 
@@ -28,17 +26,9 @@ vk::raii::PhysicalDevice vkInit::getPhysicalDevice(const vk::raii::Instance& ins
     else { throw std::runtime_error("failed to find a suitable GPU!"); }
 }
 
-vk::raii::Device vkInit::createLogicalDevice(const vk::raii::PhysicalDevice& physicalDevice)
+vk::raii::Device vkInit::createLogicalDevice(const vk::raii::PhysicalDevice& physicalDevice, uint32_t graphicsIndex)
 {
-    auto queueFamilyPropeties = physicalDevice.getQueueFamilyProperties();
     float queuePriority = 0.0f;
-
-    auto graphicsQueuFamilyProperty = std::ranges::find_if(queueFamilyPropeties, [](auto const& qfp) {
-        return (qfp.queueFlags & vk::QueueFlagBits::eGraphics) != static_cast<vk::QueueFlags>(0);
-        });
-    assert(graphicsQueuFamilyProperty != queueFamilyPropeties.end() && "No graphics queue family found!");
-
-    auto graphicsIndex = static_cast<uint32_t>(std::distance(queueFamilyPropeties.begin(), graphicsQueuFamilyProperty));
     vk::DeviceQueueCreateInfo deviceQueueCreateInfo{
         .queueFamilyIndex = graphicsIndex,
         .queueCount = 1,
@@ -61,3 +51,74 @@ vk::raii::Device vkInit::createLogicalDevice(const vk::raii::PhysicalDevice& phy
 
     return vk::raii::Device(physicalDevice, deviceCreateInfo);
 }
+
+vkInit::queueIndex vkInit::getGraphicsIndex(const vk::raii::PhysicalDevice& physicalDevice, const vk::raii::SurfaceKHR& surface)
+{
+    auto queueFamilyPropeties = physicalDevice.getQueueFamilyProperties();
+    auto graphicsQueuFamilyProperty = std::ranges::find_if(queueFamilyPropeties, [](auto const& qfp) {
+        return (qfp.queueFlags & vk::QueueFlagBits::eGraphics) != static_cast<vk::QueueFlags>(0);
+        });
+    assert(graphicsQueuFamilyProperty != queueFamilyPropeties.end() && "No graphics queue family found!");
+
+    auto graphicsIndex =  static_cast<uint32_t>(std::distance(queueFamilyPropeties.begin(), graphicsQueuFamilyProperty));
+
+    auto presentIndex = physicalDevice.getSurfaceSupportKHR(graphicsIndex, *surface) ? graphicsIndex : static_cast<uint32_t>(queueFamilyPropeties.size());
+
+    if (presentIndex == queueFamilyPropeties.size()) {
+        for (size_t i = 0; i < queueFamilyPropeties.size(); i++) {
+            if ((queueFamilyPropeties[i].queueFlags & vk::QueueFlagBits::eGraphics) &&
+                physicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(i), *surface)) {
+                graphicsIndex = static_cast<uint32_t>(i);
+                presentIndex = graphicsIndex;
+                break;
+            }
+        }
+        if (presentIndex == queueFamilyPropeties.size()) {
+            for (size_t i = 0; i < queueFamilyPropeties.size(); i++) {
+                if (physicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(i), *surface)) {
+                    presentIndex = static_cast<uint32_t>(i);
+                    break;
+                }
+            }
+        }
+    }
+    if ((graphicsIndex == queueFamilyPropeties.size()) || (presentIndex == queueFamilyPropeties.size())) {
+        throw std::runtime_error("Could not find a queue for graphics or present -> terminating");
+    }
+    return { graphicsIndex, presentIndex };
+
+}
+
+
+
+
+
+/*
+void Engine::getPhysicalDevice()
+{
+
+    auto devices = instance.enumeratePhysicalDevices();
+    if (devices.empty()) throw std::runtime_error("failed to find GPUs with Vulkan support!");
+
+    std::multimap<int, vk::raii::PhysicalDevice> candidates;
+
+    for (const auto& device : devices) {
+        physicalDevice = vk::raii::PhysicalDevice(device);
+        auto deviceProperties = device.getProperties();
+        auto deviceFeatures = device.getFeatures();
+        uint32_t score = 0;
+
+        if (deviceProperties.deviceType == vk::PhysicalDeviceType::eDiscreteGpu) score += 100;
+        score += deviceProperties.limits.maxImageDimension2D;
+
+        if (!deviceFeatures.geometryShader) { continue; }
+        candidates.insert(std::make_pair(score, device));
+    }
+
+    if (candidates.rbegin()->first > 0) {
+        physicalDevice = vk::raii::PhysicalDevice(candidates.rbegin()->second);
+    }
+    else { throw std::runtime_error("failed to find a suitable GPU!"); }
+}
+
+*/

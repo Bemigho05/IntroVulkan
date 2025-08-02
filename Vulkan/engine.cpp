@@ -7,6 +7,7 @@ Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> 
 {
     createInstance();
     setupDebugMessenger();
+    createSurface(window);
     setupDevice();
 }
 
@@ -102,39 +103,21 @@ void Engine::setupDebugMessenger() {
    
 }
 
-
-/*
-void Engine::getPhysicalDevice()
+void Engine::createSurface(std::shared_ptr<GLFWwindow> window)
 {
-
-    auto devices = instance.enumeratePhysicalDevices();
-    if (devices.empty()) throw std::runtime_error("failed to find GPUs with Vulkan support!");
-
-    std::multimap<int, vk::raii::PhysicalDevice> candidates;
-
-    for (const auto& device : devices) {
-        physicalDevice = vk::raii::PhysicalDevice(device);
-        auto deviceProperties = device.getProperties();
-        auto deviceFeatures = device.getFeatures();
-        uint32_t score = 0;
-
-        if (deviceProperties.deviceType == vk::PhysicalDeviceType::eDiscreteGpu) score += 100;
-        score += deviceProperties.limits.maxImageDimension2D;
-
-        if (!deviceFeatures.geometryShader) { continue; }
-        candidates.insert(std::make_pair(score, device));
-    }
-
-    if (candidates.rbegin()->first > 0) {
-        physicalDevice = vk::raii::PhysicalDevice(candidates.rbegin()->second);
-    }
-    else { throw std::runtime_error("failed to find a suitable GPU!"); }
+    VkSurfaceKHR _surface;
+    if (glfwCreateWindowSurface(*instance, window.get(), nullptr, &_surface) != 0)
+        throw std::runtime_error("failed to create window surface!");
+    surface = vk::raii::SurfaceKHR(instance, _surface);
 }
-
-*/
 
 void Engine::setupDevice()
 {
     physicalDevice = vkInit::getPhysicalDevice(instance);
-    device = vkInit::createLogicalDevice(physicalDevice);
+    auto queueIndex = vkInit::getGraphicsIndex(physicalDevice, surface);
+
+    device = vkInit::createLogicalDevice(physicalDevice, queueIndex.graphicsIndex);
+    
+    graphicsQueue = vk::raii::Queue(device, queueIndex.graphicsIndex, 0);
+    presentQueue = vk::raii::Queue(device, queueIndex.presentIndex, 0);
 }
