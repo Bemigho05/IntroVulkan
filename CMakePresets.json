@@ -15,7 +15,8 @@
         "VCPKG_MANIFEST_MODE": "on",
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_CXX_STANDARD_REQUIRED": "ON",
-        "VULKAN_SDK": "$env{VULKAN_SDK}"
+        "VULKAN_SDK": "$env{VULKAN_SDK}",
+        "SLANGC_EXECUTABLE" : "$env{VULKAN_SDK}"
       }
     },
     {

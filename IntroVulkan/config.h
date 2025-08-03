@@ -10,6 +10,7 @@
 #include <map>
 #include <limits>
 #include <cstdint>
+#include <fstream>
 
 
 #define VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
