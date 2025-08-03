@@ -16,6 +16,7 @@ private:
     void createSwapchain();
     void setupDevice();
     void createImageViews();
+    void createGraphicsPipeline();
 
 
     std::shared_ptr<GLFWwindow> window = nullptr;

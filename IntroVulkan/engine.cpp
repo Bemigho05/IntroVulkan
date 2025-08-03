@@ -2,6 +2,7 @@
 #include "vkInit/swapchain.h"
 #include "vkInit/device.h"
 #include "vkInit/logging.h"
+#include "vkUtil/file.h"
 
 
 Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> window)
@@ -153,4 +154,9 @@ void Engine::createImageViews()
         swapChainImageViews.emplace_back(device, imageViewCreateInfo);
     }
    
+}
+
+void Engine::createGraphicsPipeline()
+{
+    auto shaderCode = readFile("shaders/slang.spv");
 }
