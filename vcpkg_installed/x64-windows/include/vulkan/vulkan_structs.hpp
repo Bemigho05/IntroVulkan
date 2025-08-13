@@ -38655,7 +38655,7 @@ namespace VULKAN_HPP_NAMESPACE
                                const void *                                           pNext_                  = nullptr ) VULKAN_HPP_NOEXCEPT
       : pNext( pNext_ )
       , pipelineBindPoint( pipelineBindPoint_ )
-      , pipeline( pipeline_ )
+      , vkPipeline( pipeline_ )
       , indirectCommandsLayout( indirectCommandsLayout_ )
       , streamCount( streamCount_ )
       , pStreams( pStreams_ )
@@ -38693,7 +38693,7 @@ namespace VULKAN_HPP_NAMESPACE
                              const void *                     pNext_ = nullptr )
       : pNext( pNext_ )
       , pipelineBindPoint( pipelineBindPoint_ )
-      , pipeline( pipeline_ )
+      , vkPipeline( pipeline_ )
       , indirectCommandsLayout( indirectCommandsLayout_ )
       , streamCount( static_cast<uint32_t>( streams_.size() ) )
       , pStreams( streams_.data() )
@@ -38733,7 +38733,7 @@ namespace VULKAN_HPP_NAMESPACE
 
     VULKAN_HPP_CONSTEXPR_14 GeneratedCommandsInfoNV & setPipeline( VULKAN_HPP_NAMESPACE::Pipeline pipeline_ ) VULKAN_HPP_NOEXCEPT
     {
-      pipeline = pipeline_;
+      vkPipeline = pipeline_;
       return *this;
     }
 
@@ -38850,7 +38850,7 @@ namespace VULKAN_HPP_NAMESPACE
       return std::tie( sType,
                        pNext,
                        pipelineBindPoint,
-                       pipeline,
+                       vkPipeline,
                        indirectCommandsLayout,
                        streamCount,
                        pStreams,
@@ -38873,7 +38873,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  if defined( VULKAN_HPP_USE_REFLECT )
       return this->reflect() == rhs.reflect();
 #  else
-      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( pipelineBindPoint == rhs.pipelineBindPoint ) && ( pipeline == rhs.pipeline ) &&
+      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( pipelineBindPoint == rhs.pipelineBindPoint ) && ( vkPipeline == rhs.vkPipeline ) &&
              ( indirectCommandsLayout == rhs.indirectCommandsLayout ) && ( streamCount == rhs.streamCount ) && ( pStreams == rhs.pStreams ) &&
              ( sequencesCount == rhs.sequencesCount ) && ( preprocessBuffer == rhs.preprocessBuffer ) && ( preprocessOffset == rhs.preprocessOffset ) &&
              ( preprocessSize == rhs.preprocessSize ) && ( sequencesCountBuffer == rhs.sequencesCountBuffer ) &&
@@ -38892,7 +38892,7 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_NAMESPACE::StructureType                    sType                  = StructureType::eGeneratedCommandsInfoNV;
     const void *                                           pNext                  = {};
     VULKAN_HPP_NAMESPACE::PipelineBindPoint                pipelineBindPoint      = VULKAN_HPP_NAMESPACE::PipelineBindPoint::eGraphics;
-    VULKAN_HPP_NAMESPACE::Pipeline                         pipeline               = {};
+    VULKAN_HPP_NAMESPACE::Pipeline                         vkPipeline               = {};
     VULKAN_HPP_NAMESPACE::IndirectCommandsLayoutNV         indirectCommandsLayout = {};
     uint32_t                                               streamCount            = {};
     const VULKAN_HPP_NAMESPACE::IndirectCommandsStreamNV * pStreams               = {};
@@ -38928,7 +38928,7 @@ namespace VULKAN_HPP_NAMESPACE
       const void *                                   pNext_                  = nullptr ) VULKAN_HPP_NOEXCEPT
       : pNext( pNext_ )
       , pipelineBindPoint( pipelineBindPoint_ )
-      , pipeline( pipeline_ )
+      , vkPipeline( pipeline_ )
       , indirectCommandsLayout( indirectCommandsLayout_ )
       , maxSequencesCount( maxSequencesCount_ )
     {
@@ -38966,7 +38966,7 @@ namespace VULKAN_HPP_NAMESPACE
 
     VULKAN_HPP_CONSTEXPR_14 GeneratedCommandsMemoryRequirementsInfoNV & setPipeline( VULKAN_HPP_NAMESPACE::Pipeline pipeline_ ) VULKAN_HPP_NOEXCEPT
     {
-      pipeline = pipeline_;
+      vkPipeline = pipeline_;
       return *this;
     }
 
@@ -39007,7 +39007,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  endif
       reflect() const VULKAN_HPP_NOEXCEPT
     {
-      return std::tie( sType, pNext, pipelineBindPoint, pipeline, indirectCommandsLayout, maxSequencesCount );
+      return std::tie( sType, pNext, pipelineBindPoint, vkPipeline, indirectCommandsLayout, maxSequencesCount );
     }
 #endif
 
@@ -39019,7 +39019,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  if defined( VULKAN_HPP_USE_REFLECT )
       return this->reflect() == rhs.reflect();
 #  else
-      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( pipelineBindPoint == rhs.pipelineBindPoint ) && ( pipeline == rhs.pipeline ) &&
+      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( pipelineBindPoint == rhs.pipelineBindPoint ) && ( vkPipeline == rhs.vkPipeline ) &&
              ( indirectCommandsLayout == rhs.indirectCommandsLayout ) && ( maxSequencesCount == rhs.maxSequencesCount );
 #  endif
     }
@@ -39034,7 +39034,7 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_NAMESPACE::StructureType            sType                  = StructureType::eGeneratedCommandsMemoryRequirementsInfoNV;
     const void *                                   pNext                  = {};
     VULKAN_HPP_NAMESPACE::PipelineBindPoint        pipelineBindPoint      = VULKAN_HPP_NAMESPACE::PipelineBindPoint::eGraphics;
-    VULKAN_HPP_NAMESPACE::Pipeline                 pipeline               = {};
+    VULKAN_HPP_NAMESPACE::Pipeline                 vkPipeline               = {};
     VULKAN_HPP_NAMESPACE::IndirectCommandsLayoutNV indirectCommandsLayout = {};
     uint32_t                                       maxSequencesCount      = {};
   };
@@ -92868,7 +92868,7 @@ namespace VULKAN_HPP_NAMESPACE
                                                     uint32_t                       executableIndex_ = {},
                                                     const void *                   pNext_           = nullptr ) VULKAN_HPP_NOEXCEPT
       : pNext( pNext_ )
-      , pipeline( pipeline_ )
+      , vkPipeline( pipeline_ )
       , executableIndex( executableIndex_ )
     {
     }
@@ -92898,7 +92898,7 @@ namespace VULKAN_HPP_NAMESPACE
 
     VULKAN_HPP_CONSTEXPR_14 PipelineExecutableInfoKHR & setPipeline( VULKAN_HPP_NAMESPACE::Pipeline pipeline_ ) VULKAN_HPP_NOEXCEPT
     {
-      pipeline = pipeline_;
+      vkPipeline = pipeline_;
       return *this;
     }
 
@@ -92927,7 +92927,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  endif
       reflect() const VULKAN_HPP_NOEXCEPT
     {
-      return std::tie( sType, pNext, pipeline, executableIndex );
+      return std::tie( sType, pNext, vkPipeline, executableIndex );
     }
 #endif
 
@@ -92939,7 +92939,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  if defined( VULKAN_HPP_USE_REFLECT )
       return this->reflect() == rhs.reflect();
 #  else
-      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( pipeline == rhs.pipeline ) && ( executableIndex == rhs.executableIndex );
+      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( vkPipeline == rhs.vkPipeline ) && ( executableIndex == rhs.executableIndex );
 #  endif
     }
 
@@ -92952,7 +92952,7 @@ namespace VULKAN_HPP_NAMESPACE
   public:
     VULKAN_HPP_NAMESPACE::StructureType sType           = StructureType::ePipelineExecutableInfoKHR;
     const void *                        pNext           = {};
-    VULKAN_HPP_NAMESPACE::Pipeline      pipeline        = {};
+    VULKAN_HPP_NAMESPACE::Pipeline      vkPipeline        = {};
     uint32_t                            executableIndex = {};
   };
 
@@ -93660,7 +93660,7 @@ namespace VULKAN_HPP_NAMESPACE
                                            const void *                            pNext_             = nullptr ) VULKAN_HPP_NOEXCEPT
       : pNext( pNext_ )
       , pipelineBindPoint( pipelineBindPoint_ )
-      , pipeline( pipeline_ )
+      , vkPipeline( pipeline_ )
     {
     }
 
@@ -93696,7 +93696,7 @@ namespace VULKAN_HPP_NAMESPACE
 
     VULKAN_HPP_CONSTEXPR_14 PipelineIndirectDeviceAddressInfoNV & setPipeline( VULKAN_HPP_NAMESPACE::Pipeline pipeline_ ) VULKAN_HPP_NOEXCEPT
     {
-      pipeline = pipeline_;
+      vkPipeline = pipeline_;
       return *this;
     }
 #endif /*VULKAN_HPP_NO_STRUCT_SETTERS*/
@@ -93722,7 +93722,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  endif
       reflect() const VULKAN_HPP_NOEXCEPT
     {
-      return std::tie( sType, pNext, pipelineBindPoint, pipeline );
+      return std::tie( sType, pNext, pipelineBindPoint, vkPipeline );
     }
 #endif
 
@@ -93734,7 +93734,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  if defined( VULKAN_HPP_USE_REFLECT )
       return this->reflect() == rhs.reflect();
 #  else
-      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( pipelineBindPoint == rhs.pipelineBindPoint ) && ( pipeline == rhs.pipeline );
+      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( pipelineBindPoint == rhs.pipelineBindPoint ) && ( vkPipeline == rhs.vkPipeline );
 #  endif
     }
 
@@ -93748,7 +93748,7 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_NAMESPACE::StructureType     sType             = StructureType::ePipelineIndirectDeviceAddressInfoNV;
     const void *                            pNext             = {};
     VULKAN_HPP_NAMESPACE::PipelineBindPoint pipelineBindPoint = VULKAN_HPP_NAMESPACE::PipelineBindPoint::eGraphics;
-    VULKAN_HPP_NAMESPACE::Pipeline          pipeline          = {};
+    VULKAN_HPP_NAMESPACE::Pipeline          vkPipeline          = {};
   };
 
   template <>
@@ -93767,7 +93767,7 @@ namespace VULKAN_HPP_NAMESPACE
 #if !defined( VULKAN_HPP_NO_STRUCT_CONSTRUCTORS )
     VULKAN_HPP_CONSTEXPR PipelineInfoKHR( VULKAN_HPP_NAMESPACE::Pipeline pipeline_ = {}, const void * pNext_ = nullptr ) VULKAN_HPP_NOEXCEPT
       : pNext( pNext_ )
-      , pipeline( pipeline_ )
+      , vkPipeline( pipeline_ )
     {
     }
 
@@ -93793,7 +93793,7 @@ namespace VULKAN_HPP_NAMESPACE
 
     VULKAN_HPP_CONSTEXPR_14 PipelineInfoKHR & setPipeline( VULKAN_HPP_NAMESPACE::Pipeline pipeline_ ) VULKAN_HPP_NOEXCEPT
     {
-      pipeline = pipeline_;
+      vkPipeline = pipeline_;
       return *this;
     }
 #endif /*VULKAN_HPP_NO_STRUCT_SETTERS*/
@@ -93816,7 +93816,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  endif
       reflect() const VULKAN_HPP_NOEXCEPT
     {
-      return std::tie( sType, pNext, pipeline );
+      return std::tie( sType, pNext, vkPipeline );
     }
 #endif
 
@@ -93828,7 +93828,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  if defined( VULKAN_HPP_USE_REFLECT )
       return this->reflect() == rhs.reflect();
 #  else
-      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( pipeline == rhs.pipeline );
+      return ( sType == rhs.sType ) && ( pNext == rhs.pNext ) && ( vkPipeline == rhs.vkPipeline );
 #  endif
     }
 
@@ -93841,7 +93841,7 @@ namespace VULKAN_HPP_NAMESPACE
   public:
     VULKAN_HPP_NAMESPACE::StructureType sType    = StructureType::ePipelineInfoKHR;
     const void *                        pNext    = {};
-    VULKAN_HPP_NAMESPACE::Pipeline      pipeline = {};
+    VULKAN_HPP_NAMESPACE::Pipeline      vkPipeline = {};
   };
 
   template <>

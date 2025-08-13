@@ -2,7 +2,9 @@
 #include "vkInit/swapchain.h"
 #include "vkInit/device.h"
 #include "vkInit/logging.h"
+#include "vkInit/pipeline.h"
 #include "vkUtil/file.h"
+#include "vkInit/image.h"
 
 
 Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> window)
@@ -101,7 +103,7 @@ void Engine::setupDebugMessenger() {
     vk::DebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXT{
         .messageSeverity = severityFlags,
         .messageType = messageTypeFlags,
-        .pfnUserCallback = &vkInit::debugCallback
+        .pfnUserCallback = &init::debugCallback
     };
     debugMessenger = instance.createDebugUtilsMessengerEXT(debugUtilsMessengerCreateInfoEXT);
 #endif
@@ -118,7 +120,7 @@ void Engine::createSurface()
 
 void Engine::createSwapchain()
 {
-    auto _swapchain = vkInit::createSwapchain(window, physicalDevice, device, surface);
+    auto _swapchain = init::createSwapchain(window, physicalDevice, device, surface);
     swapChain = std::move(_swapchain.swapchain);
     swapChainImageFormat = _swapchain.imageFormat;
     swapChainExtent = _swapchain.extent;
@@ -127,14 +129,14 @@ void Engine::createSwapchain()
 
 void Engine::setupDevice()
 {
-    physicalDevice = vkInit::getPhysicalDevice(instance);
+    physicalDevice = init::getPhysicalDevice(instance);
 
-    auto queueFamilyIndices = vkInit::getQueueFamilyIndices(physicalDevice, surface);
+    auto queueFamilyIndices = init::getQueueFamilyIndices(physicalDevice, surface);
 
     graphicsFamily = queueFamilyIndices.graphicsFamily;
     presentFamily = queueFamilyIndices.presentFamily;
 
-    device = vkInit::createLogicalDevice(physicalDevice, queueFamilyIndices.graphicsFamily);
+    device = init::createLogicalDevice(physicalDevice, queueFamilyIndices.graphicsFamily);
     
     graphicsQueue = vk::raii::Queue(device, graphicsFamily, 0);
     presentQueue = vk::raii::Queue(device, presentFamily, 0);
@@ -158,5 +160,62 @@ void Engine::createImageViews()
 
 void Engine::createGraphicsPipeline()
 {
-    auto shaderCode = readFile("shaders/slang.spv");
+    pipelineLayout = init::createPipelineLayout(device);
+    graphicsPipeline = init::createGraphicsPipeline(device, pipelineLayout, swapChainImageFormat, swapChainExtent);
+   
+
 }
+
+void Engine::recordCommandBuffer(uint32_t imageIndex)
+{
+    commandBuffer.begin({});
+
+    init::TransitionImageLayout transitionParams = {
+        .currentFrame = imageIndex,
+        .old_layout = vk::ImageLayout::eUndefined,
+        .new_layout = vk::ImageLayout::eColorAttachmentOptimal,
+        .src_access_mask = {},
+        .dst_access_mask = vk::AccessFlagBits2::eColorAttachmentWrite,
+        .src_stage_mask = vk::PipelineStageFlagBits2::eTopOfPipe,
+        .dst_stage_mask = vk::PipelineStageFlagBits2::eColorAttachmentOutput,
+        .commandBuffer = std::ref(commandBuffer)
+    };
+
+    for (auto& swapchainImage : swapChainImages) { transitionParams.swapchainImages.emplace_back(std::ref(swapchainImage)); }
+    init::transitionImageLayout(transitionParams);
+
+    vk::ClearValue clearColor = vk::ClearColorValue(0.0f, 0.0f, 0.0f, 1.0f);
+    vk::RenderingAttachmentInfo attachmentInfo = {
+        .imageView = swapChainImageViews[imageIndex],
+        .imageLayout = vk::ImageLayout::eColorAttachmentOptimal,
+        .loadOp = vk::AttachmentLoadOp::eClear,
+        .storeOp = vk::AttachmentStoreOp::eStore,
+        .clearValue = clearColor
+    };
+
+    vk::RenderingInfo renderingInfo = {
+        .renderArea = { .offset = {0, 0}, .extent = swapChainExtent },
+        .layerCount = 1,
+        .colorAttachmentCount = 1,
+        .pColorAttachments = &attachmentInfo
+    };
+
+    commandBuffer.beginRendering(renderingInfo);
+
+    // rendering goes here
+
+    commandBuffer.endRendering();
+
+    transitionParams.old_layout = vk::ImageLayout::eColorAttachmentOptimal;
+    transitionParams.new_layout = vk::ImageLayout::ePresentSrcKHR;
+    transitionParams.src_access_mask = vk::AccessFlagBits2::eColorAttachmentWrite;
+    transitionParams.dst_access_mask = {};
+    transitionParams.src_stage_mask = vk::PipelineStageFlagBits2::eColorAttachmentOutput;
+    transitionParams.dst_stage_mask = vk::PipelineStageFlagBits2::eBottomOfPipe;
+
+    init::transitionImageLayout(transitionParams);
+
+    commandBuffer.end();
+
+} 
+

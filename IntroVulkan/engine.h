@@ -17,6 +17,7 @@ private:
     void setupDevice();
     void createImageViews();
     void createGraphicsPipeline();
+    void recordCommandBuffer(uint32_t imageIndex);
 
 
     std::shared_ptr<GLFWwindow> window = nullptr;
@@ -37,5 +38,9 @@ private:
     std::vector<vk::raii::ImageView> swapChainImageViews;
     vk::Format swapChainImageFormat = vk::Format::eUndefined;
     vk::Extent2D swapChainExtent;
+    vk::raii::PipelineLayout pipelineLayout = nullptr;
+    vk::raii::Pipeline graphicsPipeline = nullptr;
+    vk::raii::CommandBuffer commandBuffer = nullptr;
+
   
 };

@@ -44,8 +44,7 @@ add_executable(IntroVulkan
     "vkInit/device.cpp" "vkInit/device.h"
     "vkInit/swapchain.cpp" "vkInit/swapchain.h"
     "vkInit/image.cpp" "vkInit/image.h"
-    "vkInit/pipeline.cpp" "vkInit/pipeline.h" "vkUtil/file.h"
- "vkUtil/file.cpp" "vkUtil/pipeline.cpp" "vkUtil/pipeline.h")
+    "vkInit/pipeline.cpp" "vkInit/pipeline.h" "vkUtil/file.h" "vkUtil/file.cpp")
 
 add_dependencies(IntroVulkan Shaders)
 

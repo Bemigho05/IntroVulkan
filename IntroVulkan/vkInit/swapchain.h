@@ -1,7 +1,7 @@
 #pragma once
 #include "../config.h"
 
-namespace vkInit {
+namespace init {
 	struct Swapchain {
 		vk::raii::SwapchainKHR swapchain;
 		vk::Format imageFormat;

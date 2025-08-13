@@ -3083,19 +3083,19 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateGraphicsPipelines && "Function <vkCreateGraphicsPipelines> requires <VK_VERSION_1_0>" );
 #  endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateGraphicsPipelines(
       m_device,
       static_cast<VkPipelineCache>( pipelineCache ),
       1,
       reinterpret_cast<const VkGraphicsPipelineCreateInfo *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createGraphicsPipeline",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess, VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
-    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( pipeline ) );
+    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( vkPipeline ) );
   }
 
 #  ifndef VULKAN_HPP_NO_SMART_HANDLE
@@ -3125,9 +3125,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines;
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -3162,9 +3162,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines( pipelineAllocator );
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -3181,20 +3181,20 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateGraphicsPipelines && "Function <vkCreateGraphicsPipelines> requires <VK_VERSION_1_0>" );
 #    endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateGraphicsPipelines(
       m_device,
       static_cast<VkPipelineCache>( pipelineCache ),
       1,
       reinterpret_cast<const VkGraphicsPipelineCreateInfo *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createGraphicsPipelineUnique",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess, VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
     return ResultValue<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>>(
-      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( pipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
+      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( vkPipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
   }
 #  endif /* VULKAN_HPP_NO_SMART_HANDLE */
 #endif   /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
@@ -3286,19 +3286,19 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateComputePipelines && "Function <vkCreateComputePipelines> requires <VK_VERSION_1_0>" );
 #  endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateComputePipelines(
       m_device,
       static_cast<VkPipelineCache>( pipelineCache ),
       1,
       reinterpret_cast<const VkComputePipelineCreateInfo *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createComputePipeline",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess, VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
-    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( pipeline ) );
+    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( vkPipeline ) );
   }
 
 #  ifndef VULKAN_HPP_NO_SMART_HANDLE
@@ -3328,9 +3328,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines;
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -3365,9 +3365,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines( pipelineAllocator );
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -3384,36 +3384,36 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateComputePipelines && "Function <vkCreateComputePipelines> requires <VK_VERSION_1_0>" );
 #    endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateComputePipelines(
       m_device,
       static_cast<VkPipelineCache>( pipelineCache ),
       1,
       reinterpret_cast<const VkComputePipelineCreateInfo *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createComputePipelineUnique",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess, VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
     return ResultValue<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>>(
-      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( pipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
+      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( vkPipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
   }
 #  endif /* VULKAN_HPP_NO_SMART_HANDLE */
 #endif   /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
   template <typename Dispatch>
-  VULKAN_HPP_INLINE void Device::destroyPipeline( VULKAN_HPP_NAMESPACE::Pipeline                    pipeline,
+  VULKAN_HPP_INLINE void Device::destroyPipeline( VULKAN_HPP_NAMESPACE::Pipeline                    vkPipeline,
                                                   const VULKAN_HPP_NAMESPACE::AllocationCallbacks * pAllocator,
                                                   Dispatch const &                                  d ) const VULKAN_HPP_NOEXCEPT
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
-    d.vkDestroyPipeline( m_device, static_cast<VkPipeline>( pipeline ), reinterpret_cast<const VkAllocationCallbacks *>( pAllocator ) );
+    d.vkDestroyPipeline( m_device, static_cast<VkPipeline>( vkPipeline ), reinterpret_cast<const VkAllocationCallbacks *>( pAllocator ) );
   }
 
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
   template <typename Dispatch>
-  VULKAN_HPP_INLINE void Device::destroyPipeline( VULKAN_HPP_NAMESPACE::Pipeline                            pipeline,
+  VULKAN_HPP_INLINE void Device::destroyPipeline( VULKAN_HPP_NAMESPACE::Pipeline                            vkPipeline,
                                                   Optional<const VULKAN_HPP_NAMESPACE::AllocationCallbacks> allocator,
                                                   Dispatch const &                                          d ) const VULKAN_HPP_NOEXCEPT
   {
@@ -3423,23 +3423,23 @@ namespace VULKAN_HPP_NAMESPACE
 #  endif
 
     d.vkDestroyPipeline( m_device,
-                         static_cast<VkPipeline>( pipeline ),
+                         static_cast<VkPipeline>( vkPipeline ),
                          reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ) );
   }
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
   template <typename Dispatch>
-  VULKAN_HPP_INLINE void Device::destroy( VULKAN_HPP_NAMESPACE::Pipeline                    pipeline,
+  VULKAN_HPP_INLINE void Device::destroy( VULKAN_HPP_NAMESPACE::Pipeline                    vkPipeline,
                                           const VULKAN_HPP_NAMESPACE::AllocationCallbacks * pAllocator,
                                           Dispatch const &                                  d ) const VULKAN_HPP_NOEXCEPT
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
-    d.vkDestroyPipeline( m_device, static_cast<VkPipeline>( pipeline ), reinterpret_cast<const VkAllocationCallbacks *>( pAllocator ) );
+    d.vkDestroyPipeline( m_device, static_cast<VkPipeline>( vkPipeline ), reinterpret_cast<const VkAllocationCallbacks *>( pAllocator ) );
   }
 
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
   template <typename Dispatch>
-  VULKAN_HPP_INLINE void Device::destroy( VULKAN_HPP_NAMESPACE::Pipeline                            pipeline,
+  VULKAN_HPP_INLINE void Device::destroy( VULKAN_HPP_NAMESPACE::Pipeline                            vkPipeline,
                                           Optional<const VULKAN_HPP_NAMESPACE::AllocationCallbacks> allocator,
                                           Dispatch const &                                          d ) const VULKAN_HPP_NOEXCEPT
   {
@@ -3449,7 +3449,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  endif
 
     d.vkDestroyPipeline( m_device,
-                         static_cast<VkPipeline>( pipeline ),
+                         static_cast<VkPipeline>( vkPipeline ),
                          reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ) );
   }
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
@@ -4761,11 +4761,11 @@ namespace VULKAN_HPP_NAMESPACE
 
   template <typename Dispatch>
   VULKAN_HPP_INLINE void CommandBuffer::bindPipeline( VULKAN_HPP_NAMESPACE::PipelineBindPoint pipelineBindPoint,
-                                                      VULKAN_HPP_NAMESPACE::Pipeline          pipeline,
+                                                      VULKAN_HPP_NAMESPACE::Pipeline          vkPipeline,
                                                       Dispatch const &                        d ) const VULKAN_HPP_NOEXCEPT
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
-    d.vkCmdBindPipeline( m_commandBuffer, static_cast<VkPipelineBindPoint>( pipelineBindPoint ), static_cast<VkPipeline>( pipeline ) );
+    d.vkCmdBindPipeline( m_commandBuffer, static_cast<VkPipelineBindPoint>( pipelineBindPoint ), static_cast<VkPipeline>( vkPipeline ) );
   }
 
   template <typename Dispatch>
@@ -11498,7 +11498,7 @@ namespace VULKAN_HPP_NAMESPACE
   //=== VK_AMD_shader_info ===
 
   template <typename Dispatch>
-  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::getShaderInfoAMD( VULKAN_HPP_NAMESPACE::Pipeline            pipeline,
+  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::getShaderInfoAMD( VULKAN_HPP_NAMESPACE::Pipeline            vkPipeline,
                                                                           VULKAN_HPP_NAMESPACE::ShaderStageFlagBits shaderStage,
                                                                           VULKAN_HPP_NAMESPACE::ShaderInfoTypeAMD   infoType,
                                                                           size_t *                                  pInfoSize,
@@ -11507,7 +11507,7 @@ namespace VULKAN_HPP_NAMESPACE
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
     return static_cast<Result>( d.vkGetShaderInfoAMD( m_device,
-                                                      static_cast<VkPipeline>( pipeline ),
+                                                      static_cast<VkPipeline>( vkPipeline ),
                                                       static_cast<VkShaderStageFlagBits>( shaderStage ),
                                                       static_cast<VkShaderInfoTypeAMD>( infoType ),
                                                       pInfoSize,
@@ -11517,7 +11517,7 @@ namespace VULKAN_HPP_NAMESPACE
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
   template <typename Uint8_tAllocator, typename Dispatch>
   VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE typename ResultValueType<std::vector<uint8_t, Uint8_tAllocator>>::type
-                       Device::getShaderInfoAMD( VULKAN_HPP_NAMESPACE::Pipeline            pipeline,
+                       Device::getShaderInfoAMD( VULKAN_HPP_NAMESPACE::Pipeline            vkPipeline,
                               VULKAN_HPP_NAMESPACE::ShaderStageFlagBits shaderStage,
                               VULKAN_HPP_NAMESPACE::ShaderInfoTypeAMD   infoType,
                               Dispatch const &                          d ) const
@@ -11533,7 +11533,7 @@ namespace VULKAN_HPP_NAMESPACE
     do
     {
       result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetShaderInfoAMD( m_device,
-                                                                                static_cast<VkPipeline>( pipeline ),
+                                                                                static_cast<VkPipeline>( vkPipeline ),
                                                                                 static_cast<VkShaderStageFlagBits>( shaderStage ),
                                                                                 static_cast<VkShaderInfoTypeAMD>( infoType ),
                                                                                 &infoSize,
@@ -11542,7 +11542,7 @@ namespace VULKAN_HPP_NAMESPACE
       {
         info.resize( infoSize );
         result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetShaderInfoAMD( m_device,
-                                                                                  static_cast<VkPipeline>( pipeline ),
+                                                                                  static_cast<VkPipeline>( vkPipeline ),
                                                                                   static_cast<VkShaderStageFlagBits>( shaderStage ),
                                                                                   static_cast<VkShaderInfoTypeAMD>( infoType ),
                                                                                   &infoSize,
@@ -11562,7 +11562,7 @@ namespace VULKAN_HPP_NAMESPACE
             typename Dispatch,
             typename std::enable_if<std::is_same<typename Uint8_tAllocator::value_type, uint8_t>::value, int>::type>
   VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE typename ResultValueType<std::vector<uint8_t, Uint8_tAllocator>>::type
-                       Device::getShaderInfoAMD( VULKAN_HPP_NAMESPACE::Pipeline            pipeline,
+                       Device::getShaderInfoAMD( VULKAN_HPP_NAMESPACE::Pipeline            vkPipeline,
                               VULKAN_HPP_NAMESPACE::ShaderStageFlagBits shaderStage,
                               VULKAN_HPP_NAMESPACE::ShaderInfoTypeAMD   infoType,
                               Uint8_tAllocator &                        uint8_tAllocator,
@@ -11579,7 +11579,7 @@ namespace VULKAN_HPP_NAMESPACE
     do
     {
       result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetShaderInfoAMD( m_device,
-                                                                                static_cast<VkPipeline>( pipeline ),
+                                                                                static_cast<VkPipeline>( vkPipeline ),
                                                                                 static_cast<VkShaderStageFlagBits>( shaderStage ),
                                                                                 static_cast<VkShaderInfoTypeAMD>( infoType ),
                                                                                 &infoSize,
@@ -11588,7 +11588,7 @@ namespace VULKAN_HPP_NAMESPACE
       {
         info.resize( infoSize );
         result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetShaderInfoAMD( m_device,
-                                                                                  static_cast<VkPipeline>( pipeline ),
+                                                                                  static_cast<VkPipeline>( vkPipeline ),
                                                                                   static_cast<VkShaderStageFlagBits>( shaderStage ),
                                                                                   static_cast<VkShaderInfoTypeAMD>( infoType ),
                                                                                   &infoSize,
@@ -15221,19 +15221,19 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateExecutionGraphPipelinesAMDX && "Function <vkCreateExecutionGraphPipelinesAMDX> requires <VK_AMDX_shader_enqueue>" );
 #    endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateExecutionGraphPipelinesAMDX(
       m_device,
       static_cast<VkPipelineCache>( pipelineCache ),
       1,
       reinterpret_cast<const VkExecutionGraphPipelineCreateInfoAMDX *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createExecutionGraphPipelineAMDX",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess, VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
-    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( pipeline ) );
+    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( vkPipeline ) );
   }
 
 #    ifndef VULKAN_HPP_NO_SMART_HANDLE
@@ -15264,9 +15264,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines;
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -15302,9 +15302,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines( pipelineAllocator );
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -15321,20 +15321,20 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateExecutionGraphPipelinesAMDX && "Function <vkCreateExecutionGraphPipelinesAMDX> requires <VK_AMDX_shader_enqueue>" );
 #      endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateExecutionGraphPipelinesAMDX(
       m_device,
       static_cast<VkPipelineCache>( pipelineCache ),
       1,
       reinterpret_cast<const VkExecutionGraphPipelineCreateInfoAMDX *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createExecutionGraphPipelineAMDXUnique",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess, VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
     return ResultValue<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>>(
-      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( pipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
+      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( vkPipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
   }
 #    endif /* VULKAN_HPP_NO_SMART_HANDLE */
 #  endif   /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
@@ -16522,7 +16522,7 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateRayTracingPipelinesKHR && "Function <vkCreateRayTracingPipelinesKHR> requires <VK_KHR_ray_tracing_pipeline>" );
 #  endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateRayTracingPipelinesKHR(
       m_device,
       static_cast<VkDeferredOperationKHR>( deferredOperation ),
@@ -16530,7 +16530,7 @@ namespace VULKAN_HPP_NAMESPACE
       1,
       reinterpret_cast<const VkRayTracingPipelineCreateInfoKHR *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createRayTracingPipelineKHR",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess,
@@ -16538,7 +16538,7 @@ namespace VULKAN_HPP_NAMESPACE
                    VULKAN_HPP_NAMESPACE::Result::eOperationNotDeferredKHR,
                    VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
-    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( pipeline ) );
+    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( vkPipeline ) );
   }
 
 #  ifndef VULKAN_HPP_NO_SMART_HANDLE
@@ -16574,9 +16574,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines;
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -16617,9 +16617,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines( pipelineAllocator );
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -16637,7 +16637,7 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateRayTracingPipelinesKHR && "Function <vkCreateRayTracingPipelinesKHR> requires <VK_KHR_ray_tracing_pipeline>" );
 #    endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateRayTracingPipelinesKHR(
       m_device,
       static_cast<VkDeferredOperationKHR>( deferredOperation ),
@@ -16645,7 +16645,7 @@ namespace VULKAN_HPP_NAMESPACE
       1,
       reinterpret_cast<const VkRayTracingPipelineCreateInfoKHR *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createRayTracingPipelineKHRUnique",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess,
@@ -16654,13 +16654,13 @@ namespace VULKAN_HPP_NAMESPACE
                    VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
     return ResultValue<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>>(
-      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( pipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
+      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( vkPipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
   }
 #  endif /* VULKAN_HPP_NO_SMART_HANDLE */
 #endif   /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
   template <typename Dispatch>
-  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::getRayTracingShaderGroupHandlesKHR( VULKAN_HPP_NAMESPACE::Pipeline pipeline,
+  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::getRayTracingShaderGroupHandlesKHR( VULKAN_HPP_NAMESPACE::Pipeline vkPipeline,
                                                                                             uint32_t                       firstGroup,
                                                                                             uint32_t                       groupCount,
                                                                                             size_t                         dataSize,
@@ -16669,13 +16669,13 @@ namespace VULKAN_HPP_NAMESPACE
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
     return static_cast<Result>(
-      d.vkGetRayTracingShaderGroupHandlesKHR( m_device, static_cast<VkPipeline>( pipeline ), firstGroup, groupCount, dataSize, pData ) );
+      d.vkGetRayTracingShaderGroupHandlesKHR( m_device, static_cast<VkPipeline>( vkPipeline ), firstGroup, groupCount, dataSize, pData ) );
   }
 
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
   template <typename DataType, typename DataTypeAllocator, typename Dispatch>
   VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE typename ResultValueType<std::vector<DataType, DataTypeAllocator>>::type Device::getRayTracingShaderGroupHandlesKHR(
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, Dispatch const & d ) const
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, Dispatch const & d ) const
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
 #  if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
@@ -16686,7 +16686,7 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( dataSize % sizeof( DataType ) == 0 );
     std::vector<DataType, DataTypeAllocator> data( dataSize / sizeof( DataType ) );
     VULKAN_HPP_NAMESPACE::Result             result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetRayTracingShaderGroupHandlesKHR(
-      m_device, static_cast<VkPipeline>( pipeline ), firstGroup, groupCount, data.size() * sizeof( DataType ), reinterpret_cast<void *>( data.data() ) ) );
+      m_device, static_cast<VkPipeline>( vkPipeline ), firstGroup, groupCount, data.size() * sizeof( DataType ), reinterpret_cast<void *>( data.data() ) ) );
     resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::getRayTracingShaderGroupHandlesKHR" );
 
     return createResultValueType( result, std::move( data ) );
@@ -16694,7 +16694,7 @@ namespace VULKAN_HPP_NAMESPACE
 
   template <typename DataType, typename Dispatch>
   VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE typename ResultValueType<DataType>::type
-    Device::getRayTracingShaderGroupHandleKHR( VULKAN_HPP_NAMESPACE::Pipeline pipeline, uint32_t firstGroup, uint32_t groupCount, Dispatch const & d ) const
+    Device::getRayTracingShaderGroupHandleKHR( VULKAN_HPP_NAMESPACE::Pipeline vkPipeline, uint32_t firstGroup, uint32_t groupCount, Dispatch const & d ) const
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
 #  if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
@@ -16704,7 +16704,7 @@ namespace VULKAN_HPP_NAMESPACE
 
     DataType                     data;
     VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetRayTracingShaderGroupHandlesKHR(
-      m_device, static_cast<VkPipeline>( pipeline ), firstGroup, groupCount, sizeof( DataType ), reinterpret_cast<void *>( &data ) ) );
+      m_device, static_cast<VkPipeline>( vkPipeline ), firstGroup, groupCount, sizeof( DataType ), reinterpret_cast<void *>( &data ) ) );
     resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::getRayTracingShaderGroupHandleKHR" );
 
     return createResultValueType( result, std::move( data ) );
@@ -16712,7 +16712,7 @@ namespace VULKAN_HPP_NAMESPACE
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
   template <typename Dispatch>
-  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::getRayTracingCaptureReplayShaderGroupHandlesKHR( VULKAN_HPP_NAMESPACE::Pipeline pipeline,
+  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::getRayTracingCaptureReplayShaderGroupHandlesKHR( VULKAN_HPP_NAMESPACE::Pipeline vkPipeline,
                                                                                                          uint32_t                       firstGroup,
                                                                                                          uint32_t                       groupCount,
                                                                                                          size_t                         dataSize,
@@ -16721,14 +16721,14 @@ namespace VULKAN_HPP_NAMESPACE
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
     return static_cast<Result>(
-      d.vkGetRayTracingCaptureReplayShaderGroupHandlesKHR( m_device, static_cast<VkPipeline>( pipeline ), firstGroup, groupCount, dataSize, pData ) );
+      d.vkGetRayTracingCaptureReplayShaderGroupHandlesKHR( m_device, static_cast<VkPipeline>( vkPipeline ), firstGroup, groupCount, dataSize, pData ) );
   }
 
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
   template <typename DataType, typename DataTypeAllocator, typename Dispatch>
   VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE typename ResultValueType<std::vector<DataType, DataTypeAllocator>>::type
                        Device::getRayTracingCaptureReplayShaderGroupHandlesKHR(
-      VULKAN_HPP_NAMESPACE::Pipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, Dispatch const & d ) const
+      VULKAN_HPP_NAMESPACE::Pipeline vkPipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, Dispatch const & d ) const
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
 #  if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
@@ -16739,7 +16739,7 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( dataSize % sizeof( DataType ) == 0 );
     std::vector<DataType, DataTypeAllocator> data( dataSize / sizeof( DataType ) );
     VULKAN_HPP_NAMESPACE::Result             result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(
-      m_device, static_cast<VkPipeline>( pipeline ), firstGroup, groupCount, data.size() * sizeof( DataType ), reinterpret_cast<void *>( data.data() ) ) );
+      m_device, static_cast<VkPipeline>( vkPipeline ), firstGroup, groupCount, data.size() * sizeof( DataType ), reinterpret_cast<void *>( data.data() ) ) );
     resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::getRayTracingCaptureReplayShaderGroupHandlesKHR" );
 
     return createResultValueType( result, std::move( data ) );
@@ -16747,7 +16747,7 @@ namespace VULKAN_HPP_NAMESPACE
 
   template <typename DataType, typename Dispatch>
   VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE typename ResultValueType<DataType>::type Device::getRayTracingCaptureReplayShaderGroupHandleKHR(
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline, uint32_t firstGroup, uint32_t groupCount, Dispatch const & d ) const
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline, uint32_t firstGroup, uint32_t groupCount, Dispatch const & d ) const
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
 #  if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
@@ -16757,7 +16757,7 @@ namespace VULKAN_HPP_NAMESPACE
 
     DataType                     data;
     VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(
-      m_device, static_cast<VkPipeline>( pipeline ), firstGroup, groupCount, sizeof( DataType ), reinterpret_cast<void *>( &data ) ) );
+      m_device, static_cast<VkPipeline>( vkPipeline ), firstGroup, groupCount, sizeof( DataType ), reinterpret_cast<void *>( &data ) ) );
     resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::getRayTracingCaptureReplayShaderGroupHandleKHR" );
 
     return createResultValueType( result, std::move( data ) );
@@ -16805,14 +16805,14 @@ namespace VULKAN_HPP_NAMESPACE
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
   template <typename Dispatch>
-  VULKAN_HPP_INLINE DeviceSize Device::getRayTracingShaderGroupStackSizeKHR( VULKAN_HPP_NAMESPACE::Pipeline             pipeline,
+  VULKAN_HPP_INLINE DeviceSize Device::getRayTracingShaderGroupStackSizeKHR( VULKAN_HPP_NAMESPACE::Pipeline             vkPipeline,
                                                                              uint32_t                                   group,
                                                                              VULKAN_HPP_NAMESPACE::ShaderGroupShaderKHR groupShader,
                                                                              Dispatch const &                           d ) const VULKAN_HPP_NOEXCEPT
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
     return static_cast<DeviceSize>(
-      d.vkGetRayTracingShaderGroupStackSizeKHR( m_device, static_cast<VkPipeline>( pipeline ), group, static_cast<VkShaderGroupShaderKHR>( groupShader ) ) );
+      d.vkGetRayTracingShaderGroupStackSizeKHR( m_device, static_cast<VkPipeline>( vkPipeline ), group, static_cast<VkShaderGroupShaderKHR>( groupShader ) ) );
   }
 
   template <typename Dispatch>
@@ -17695,19 +17695,19 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateRayTracingPipelinesNV && "Function <vkCreateRayTracingPipelinesNV> requires <VK_NV_ray_tracing>" );
 #  endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateRayTracingPipelinesNV(
       m_device,
       static_cast<VkPipelineCache>( pipelineCache ),
       1,
       reinterpret_cast<const VkRayTracingPipelineCreateInfoNV *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createRayTracingPipelineNV",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess, VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
-    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( pipeline ) );
+    return ResultValue<VULKAN_HPP_NAMESPACE::Pipeline>( result, std::move( vkPipeline ) );
   }
 
 #  ifndef VULKAN_HPP_NO_SMART_HANDLE
@@ -17737,9 +17737,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines;
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -17774,9 +17774,9 @@ namespace VULKAN_HPP_NAMESPACE
     std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator> uniquePipelines( pipelineAllocator );
     uniquePipelines.reserve( createInfos.size() );
     ObjectDestroy<Device, Dispatch> deleter( *this, allocator, d );
-    for ( auto const & pipeline : pipelines )
+    for ( auto const & vkPipeline : pipelines )
     {
-      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( pipeline, deleter ) );
+      uniquePipelines.push_back( UniqueHandle<Pipeline, Dispatch>( vkPipeline, deleter ) );
     }
     return ResultValue<std::vector<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>, PipelineAllocator>>( result, std::move( uniquePipelines ) );
   }
@@ -17793,26 +17793,26 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( d.vkCreateRayTracingPipelinesNV && "Function <vkCreateRayTracingPipelinesNV> requires <VK_NV_ray_tracing>" );
 #    endif
 
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline;
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline;
     VULKAN_HPP_NAMESPACE::Result   result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCreateRayTracingPipelinesNV(
       m_device,
       static_cast<VkPipelineCache>( pipelineCache ),
       1,
       reinterpret_cast<const VkRayTracingPipelineCreateInfoNV *>( &createInfo ),
       reinterpret_cast<const VkAllocationCallbacks *>( static_cast<const VULKAN_HPP_NAMESPACE::AllocationCallbacks *>( allocator ) ),
-      reinterpret_cast<VkPipeline *>( &pipeline ) ) );
+      reinterpret_cast<VkPipeline *>( &vkPipeline ) ) );
     resultCheck( result,
                  VULKAN_HPP_NAMESPACE_STRING "::Device::createRayTracingPipelineNVUnique",
                  { VULKAN_HPP_NAMESPACE::Result::eSuccess, VULKAN_HPP_NAMESPACE::Result::ePipelineCompileRequiredEXT } );
 
     return ResultValue<UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>>(
-      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( pipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
+      result, UniqueHandle<VULKAN_HPP_NAMESPACE::Pipeline, Dispatch>( vkPipeline, ObjectDestroy<Device, Dispatch>( *this, allocator, d ) ) );
   }
 #  endif /* VULKAN_HPP_NO_SMART_HANDLE */
 #endif   /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
   template <typename Dispatch>
-  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::getRayTracingShaderGroupHandlesNV( VULKAN_HPP_NAMESPACE::Pipeline pipeline,
+  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::getRayTracingShaderGroupHandlesNV( VULKAN_HPP_NAMESPACE::Pipeline vkPipeline,
                                                                                            uint32_t                       firstGroup,
                                                                                            uint32_t                       groupCount,
                                                                                            size_t                         dataSize,
@@ -17821,13 +17821,13 @@ namespace VULKAN_HPP_NAMESPACE
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
     return static_cast<Result>(
-      d.vkGetRayTracingShaderGroupHandlesNV( m_device, static_cast<VkPipeline>( pipeline ), firstGroup, groupCount, dataSize, pData ) );
+      d.vkGetRayTracingShaderGroupHandlesNV( m_device, static_cast<VkPipeline>( vkPipeline ), firstGroup, groupCount, dataSize, pData ) );
   }
 
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
   template <typename DataType, typename DataTypeAllocator, typename Dispatch>
   VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE typename ResultValueType<std::vector<DataType, DataTypeAllocator>>::type Device::getRayTracingShaderGroupHandlesNV(
-    VULKAN_HPP_NAMESPACE::Pipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, Dispatch const & d ) const
+    VULKAN_HPP_NAMESPACE::Pipeline vkPipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, Dispatch const & d ) const
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
 #  if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
@@ -17838,7 +17838,7 @@ namespace VULKAN_HPP_NAMESPACE
     VULKAN_HPP_ASSERT( dataSize % sizeof( DataType ) == 0 );
     std::vector<DataType, DataTypeAllocator> data( dataSize / sizeof( DataType ) );
     VULKAN_HPP_NAMESPACE::Result             result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetRayTracingShaderGroupHandlesNV(
-      m_device, static_cast<VkPipeline>( pipeline ), firstGroup, groupCount, data.size() * sizeof( DataType ), reinterpret_cast<void *>( data.data() ) ) );
+      m_device, static_cast<VkPipeline>( vkPipeline ), firstGroup, groupCount, data.size() * sizeof( DataType ), reinterpret_cast<void *>( data.data() ) ) );
     resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::getRayTracingShaderGroupHandlesNV" );
 
     return createResultValueType( result, std::move( data ) );
@@ -17846,7 +17846,7 @@ namespace VULKAN_HPP_NAMESPACE
 
   template <typename DataType, typename Dispatch>
   VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE typename ResultValueType<DataType>::type
-    Device::getRayTracingShaderGroupHandleNV( VULKAN_HPP_NAMESPACE::Pipeline pipeline, uint32_t firstGroup, uint32_t groupCount, Dispatch const & d ) const
+    Device::getRayTracingShaderGroupHandleNV( VULKAN_HPP_NAMESPACE::Pipeline vkPipeline, uint32_t firstGroup, uint32_t groupCount, Dispatch const & d ) const
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
 #  if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
@@ -17856,7 +17856,7 @@ namespace VULKAN_HPP_NAMESPACE
 
     DataType                     data;
     VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkGetRayTracingShaderGroupHandlesNV(
-      m_device, static_cast<VkPipeline>( pipeline ), firstGroup, groupCount, sizeof( DataType ), reinterpret_cast<void *>( &data ) ) );
+      m_device, static_cast<VkPipeline>( vkPipeline ), firstGroup, groupCount, sizeof( DataType ), reinterpret_cast<void *>( &data ) ) );
     resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::getRayTracingShaderGroupHandleNV" );
 
     return createResultValueType( result, std::move( data ) );
@@ -17954,17 +17954,17 @@ namespace VULKAN_HPP_NAMESPACE
 
 #ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
   template <typename Dispatch>
-  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::compileDeferredNV( VULKAN_HPP_NAMESPACE::Pipeline pipeline,
+  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::compileDeferredNV( VULKAN_HPP_NAMESPACE::Pipeline vkPipeline,
                                                                            uint32_t                       shader,
                                                                            Dispatch const &               d ) const VULKAN_HPP_NOEXCEPT
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
-    return static_cast<Result>( d.vkCompileDeferredNV( m_device, static_cast<VkPipeline>( pipeline ), shader ) );
+    return static_cast<Result>( d.vkCompileDeferredNV( m_device, static_cast<VkPipeline>( vkPipeline ), shader ) );
   }
 #else
   template <typename Dispatch>
   VULKAN_HPP_NODISCARD_WHEN_NO_EXCEPTIONS VULKAN_HPP_INLINE typename ResultValueType<void>::type
-                                          Device::compileDeferredNV( VULKAN_HPP_NAMESPACE::Pipeline pipeline, uint32_t shader, Dispatch const & d ) const
+                                          Device::compileDeferredNV( VULKAN_HPP_NAMESPACE::Pipeline vkPipeline, uint32_t shader, Dispatch const & d ) const
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
 #  if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
@@ -17972,7 +17972,7 @@ namespace VULKAN_HPP_NAMESPACE
 #  endif
 
     VULKAN_HPP_NAMESPACE::Result result =
-      static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCompileDeferredNV( m_device, static_cast<VkPipeline>( pipeline ), shader ) );
+      static_cast<VULKAN_HPP_NAMESPACE::Result>( d.vkCompileDeferredNV( m_device, static_cast<VkPipeline>( vkPipeline ), shader ) );
     resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::compileDeferredNV" );
 
     return createResultValueType( result );
@@ -20799,12 +20799,12 @@ namespace VULKAN_HPP_NAMESPACE
 
   template <typename Dispatch>
   VULKAN_HPP_INLINE void CommandBuffer::bindPipelineShaderGroupNV( VULKAN_HPP_NAMESPACE::PipelineBindPoint pipelineBindPoint,
-                                                                   VULKAN_HPP_NAMESPACE::Pipeline          pipeline,
+                                                                   VULKAN_HPP_NAMESPACE::Pipeline          vkPipeline,
                                                                    uint32_t                                groupIndex,
                                                                    Dispatch const &                        d ) const VULKAN_HPP_NOEXCEPT
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
-    d.vkCmdBindPipelineShaderGroupNV( m_commandBuffer, static_cast<VkPipelineBindPoint>( pipelineBindPoint ), static_cast<VkPipeline>( pipeline ), groupIndex );
+    d.vkCmdBindPipelineShaderGroupNV( m_commandBuffer, static_cast<VkPipelineBindPoint>( pipelineBindPoint ), static_cast<VkPipeline>( vkPipeline ), groupIndex );
   }
 
   template <typename Dispatch>
@@ -24442,11 +24442,11 @@ namespace VULKAN_HPP_NAMESPACE
 
   template <typename Dispatch>
   VULKAN_HPP_INLINE void CommandBuffer::updatePipelineIndirectBufferNV( VULKAN_HPP_NAMESPACE::PipelineBindPoint pipelineBindPoint,
-                                                                        VULKAN_HPP_NAMESPACE::Pipeline          pipeline,
+                                                                        VULKAN_HPP_NAMESPACE::Pipeline          vkPipeline,
                                                                         Dispatch const &                        d ) const VULKAN_HPP_NOEXCEPT
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
-    d.vkCmdUpdatePipelineIndirectBufferNV( m_commandBuffer, static_cast<VkPipelineBindPoint>( pipelineBindPoint ), static_cast<VkPipeline>( pipeline ) );
+    d.vkCmdUpdatePipelineIndirectBufferNV( m_commandBuffer, static_cast<VkPipelineBindPoint>( pipelineBindPoint ), static_cast<VkPipeline>( vkPipeline ) );
   }
 
   template <typename Dispatch>

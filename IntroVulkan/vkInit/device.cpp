@@ -1,6 +1,6 @@
 #include "device.h"
 
-vk::raii::PhysicalDevice vkInit::getPhysicalDevice(const vk::raii::Instance& instance)
+vk::raii::PhysicalDevice init::getPhysicalDevice(const vk::raii::Instance& instance)
 {
     std::vector<vk::raii::PhysicalDevice> devices = instance.enumeratePhysicalDevices();
     const auto devIter = std::ranges::find_if(devices, [&](auto const& device) {
@@ -26,7 +26,7 @@ vk::raii::PhysicalDevice vkInit::getPhysicalDevice(const vk::raii::Instance& ins
     else { throw std::runtime_error("failed to find a suitable GPU!"); }
 }
 
-vk::raii::Device vkInit::createLogicalDevice(const vk::raii::PhysicalDevice& physicalDevice, uint32_t graphicsFamily)
+vk::raii::Device init::createLogicalDevice(const vk::raii::PhysicalDevice& physicalDevice, uint32_t graphicsFamily)
 {
     float queuePriority = 0.0f;
     vk::DeviceQueueCreateInfo deviceQueueCreateInfo{
@@ -52,7 +52,7 @@ vk::raii::Device vkInit::createLogicalDevice(const vk::raii::PhysicalDevice& phy
     return vk::raii::Device(physicalDevice, deviceCreateInfo);
 }
 
-vkInit::QueueFamilyIndices vkInit::getQueueFamilyIndices(const vk::raii::PhysicalDevice& physicalDevice, const vk::raii::SurfaceKHR& surface)
+init::QueueFamilyIndices init::getQueueFamilyIndices(const vk::raii::PhysicalDevice& physicalDevice, const vk::raii::SurfaceKHR& surface)
 {
     auto queueFamilyPropeties = physicalDevice.getQueueFamilyProperties();
     auto graphicsQueuFamilyProperty = std::ranges::find_if(queueFamilyPropeties, [](auto const& qfp) {

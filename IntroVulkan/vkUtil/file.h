@@ -1,5 +1,5 @@
 #include "../config.h"
 
 namespace vkUtil {
-	static std::vector<char> readFile(const std::string& filename);
+	std::vector<char> readFile(const std::string& filename);
 }

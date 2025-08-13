@@ -1450,9 +1450,9 @@ namespace VULKAN_HPP_NAMESPACE
       return ::vkCreateComputePipelines( device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines );
     }
 
-    void vkDestroyPipeline( VkDevice device, VkPipeline pipeline, const VkAllocationCallbacks * pAllocator ) const VULKAN_HPP_NOEXCEPT
+    void vkDestroyPipeline( VkDevice device, VkPipeline vkPipeline, const VkAllocationCallbacks * pAllocator ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkDestroyPipeline( device, pipeline, pAllocator );
+      return ::vkDestroyPipeline( device, vkPipeline, pAllocator );
     }
 
     VkResult vkCreatePipelineLayout( VkDevice                           device,
@@ -1617,9 +1617,9 @@ namespace VULKAN_HPP_NAMESPACE
       return ::vkResetCommandBuffer( commandBuffer, flags );
     }
 
-    void vkCmdBindPipeline( VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline ) const VULKAN_HPP_NOEXCEPT
+    void vkCmdBindPipeline( VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline vkPipeline ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkCmdBindPipeline( commandBuffer, pipelineBindPoint, pipeline );
+      return ::vkCmdBindPipeline( commandBuffer, pipelineBindPoint, vkPipeline );
     }
 
     void
@@ -2977,13 +2977,13 @@ namespace VULKAN_HPP_NAMESPACE
     //=== VK_AMD_shader_info ===
 
     VkResult vkGetShaderInfoAMD( VkDevice              device,
-                                 VkPipeline            pipeline,
+                                 VkPipeline            vkPipeline,
                                  VkShaderStageFlagBits shaderStage,
                                  VkShaderInfoTypeAMD   infoType,
                                  size_t *              pInfoSize,
                                  void *                pInfo ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkGetShaderInfoAMD( device, pipeline, shaderStage, infoType, pInfoSize, pInfo );
+      return ::vkGetShaderInfoAMD( device, vkPipeline, shaderStage, infoType, pInfoSize, pInfo );
     }
 
     //=== VK_KHR_dynamic_rendering ===
@@ -3896,15 +3896,15 @@ namespace VULKAN_HPP_NAMESPACE
     }
 
     VkResult vkGetRayTracingShaderGroupHandlesKHR(
-      VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void * pData ) const VULKAN_HPP_NOEXCEPT
+      VkDevice device, VkPipeline vkPipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void * pData ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkGetRayTracingShaderGroupHandlesKHR( device, pipeline, firstGroup, groupCount, dataSize, pData );
+      return ::vkGetRayTracingShaderGroupHandlesKHR( device, vkPipeline, firstGroup, groupCount, dataSize, pData );
     }
 
     VkResult vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(
-      VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void * pData ) const VULKAN_HPP_NOEXCEPT
+      VkDevice device, VkPipeline vkPipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void * pData ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkGetRayTracingCaptureReplayShaderGroupHandlesKHR( device, pipeline, firstGroup, groupCount, dataSize, pData );
+      return ::vkGetRayTracingCaptureReplayShaderGroupHandlesKHR( device, vkPipeline, firstGroup, groupCount, dataSize, pData );
     }
 
     void vkCmdTraceRaysIndirectKHR( VkCommandBuffer                         commandBuffer,
@@ -3919,11 +3919,11 @@ namespace VULKAN_HPP_NAMESPACE
     }
 
     VkDeviceSize vkGetRayTracingShaderGroupStackSizeKHR( VkDevice               device,
-                                                         VkPipeline             pipeline,
+                                                         VkPipeline             vkPipeline,
                                                          uint32_t               group,
                                                          VkShaderGroupShaderKHR groupShader ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkGetRayTracingShaderGroupStackSizeKHR( device, pipeline, group, groupShader );
+      return ::vkGetRayTracingShaderGroupStackSizeKHR( device, vkPipeline, group, groupShader );
     }
 
     void vkCmdSetRayTracingPipelineStackSizeKHR( VkCommandBuffer commandBuffer, uint32_t pipelineStackSize ) const VULKAN_HPP_NOEXCEPT
@@ -4116,9 +4116,9 @@ namespace VULKAN_HPP_NAMESPACE
     }
 
     VkResult vkGetRayTracingShaderGroupHandlesNV(
-      VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void * pData ) const VULKAN_HPP_NOEXCEPT
+      VkDevice device, VkPipeline vkPipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void * pData ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkGetRayTracingShaderGroupHandlesNV( device, pipeline, firstGroup, groupCount, dataSize, pData );
+      return ::vkGetRayTracingShaderGroupHandlesNV( device, vkPipeline, firstGroup, groupCount, dataSize, pData );
     }
 
     VkResult vkGetAccelerationStructureHandleNV( VkDevice                  device,
@@ -4140,9 +4140,9 @@ namespace VULKAN_HPP_NAMESPACE
         commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery );
     }
 
-    VkResult vkCompileDeferredNV( VkDevice device, VkPipeline pipeline, uint32_t shader ) const VULKAN_HPP_NOEXCEPT
+    VkResult vkCompileDeferredNV( VkDevice device, VkPipeline vkPipeline, uint32_t shader ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkCompileDeferredNV( device, pipeline, shader );
+      return ::vkCompileDeferredNV( device, vkPipeline, shader );
     }
 
     //=== VK_KHR_maintenance3 ===
@@ -4712,10 +4712,10 @@ namespace VULKAN_HPP_NAMESPACE
 
     void vkCmdBindPipelineShaderGroupNV( VkCommandBuffer     commandBuffer,
                                          VkPipelineBindPoint pipelineBindPoint,
-                                         VkPipeline          pipeline,
+                                         VkPipeline          vkPipeline,
                                          uint32_t            groupIndex ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkCmdBindPipelineShaderGroupNV( commandBuffer, pipelineBindPoint, pipeline, groupIndex );
+      return ::vkCmdBindPipelineShaderGroupNV( commandBuffer, pipelineBindPoint, vkPipeline, groupIndex );
     }
 
     VkResult vkCreateIndirectCommandsLayoutNV( VkDevice                                     device,
@@ -5491,9 +5491,9 @@ namespace VULKAN_HPP_NAMESPACE
     }
 
     void
-      vkCmdUpdatePipelineIndirectBufferNV( VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline ) const VULKAN_HPP_NOEXCEPT
+      vkCmdUpdatePipelineIndirectBufferNV( VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline vkPipeline ) const VULKAN_HPP_NOEXCEPT
     {
-      return ::vkCmdUpdatePipelineIndirectBufferNV( commandBuffer, pipelineBindPoint, pipeline );
+      return ::vkCmdUpdatePipelineIndirectBufferNV( commandBuffer, pipelineBindPoint, vkPipeline );
     }
 
     VkDeviceAddress vkGetPipelineIndirectDeviceAddressNV( VkDevice device, const VkPipelineIndirectDeviceAddressInfoNV * pInfo ) const VULKAN_HPP_NOEXCEPT

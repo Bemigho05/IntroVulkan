@@ -169,9 +169,9 @@ namespace std
   template <>
   struct hash<VULKAN_HPP_NAMESPACE::Pipeline>
   {
-    std::size_t operator()( VULKAN_HPP_NAMESPACE::Pipeline const & pipeline ) const VULKAN_HPP_NOEXCEPT
+    std::size_t operator()( VULKAN_HPP_NAMESPACE::Pipeline const & vkPipeline ) const VULKAN_HPP_NOEXCEPT
     {
-      return std::hash<VkPipeline>{}( static_cast<VkPipeline>( pipeline ) );
+      return std::hash<VkPipeline>{}( static_cast<VkPipeline>( vkPipeline ) );
     }
   };
 
@@ -5172,7 +5172,7 @@ namespace std
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsInfoNV.sType );
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsInfoNV.pNext );
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsInfoNV.pipelineBindPoint );
-      VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsInfoNV.pipeline );
+      VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsInfoNV.vkPipeline );
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsInfoNV.indirectCommandsLayout );
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsInfoNV.streamCount );
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsInfoNV.pStreams );
@@ -5198,7 +5198,7 @@ namespace std
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsMemoryRequirementsInfoNV.sType );
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsMemoryRequirementsInfoNV.pNext );
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsMemoryRequirementsInfoNV.pipelineBindPoint );
-      VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsMemoryRequirementsInfoNV.pipeline );
+      VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsMemoryRequirementsInfoNV.vkPipeline );
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsMemoryRequirementsInfoNV.indirectCommandsLayout );
       VULKAN_HPP_HASH_COMBINE( seed, generatedCommandsMemoryRequirementsInfoNV.maxSequencesCount );
       return seed;
@@ -12665,7 +12665,7 @@ namespace std
       std::size_t seed = 0;
       VULKAN_HPP_HASH_COMBINE( seed, pipelineExecutableInfoKHR.sType );
       VULKAN_HPP_HASH_COMBINE( seed, pipelineExecutableInfoKHR.pNext );
-      VULKAN_HPP_HASH_COMBINE( seed, pipelineExecutableInfoKHR.pipeline );
+      VULKAN_HPP_HASH_COMBINE( seed, pipelineExecutableInfoKHR.vkPipeline );
       VULKAN_HPP_HASH_COMBINE( seed, pipelineExecutableInfoKHR.executableIndex );
       return seed;
     }
@@ -12763,7 +12763,7 @@ namespace std
       VULKAN_HPP_HASH_COMBINE( seed, pipelineIndirectDeviceAddressInfoNV.sType );
       VULKAN_HPP_HASH_COMBINE( seed, pipelineIndirectDeviceAddressInfoNV.pNext );
       VULKAN_HPP_HASH_COMBINE( seed, pipelineIndirectDeviceAddressInfoNV.pipelineBindPoint );
-      VULKAN_HPP_HASH_COMBINE( seed, pipelineIndirectDeviceAddressInfoNV.pipeline );
+      VULKAN_HPP_HASH_COMBINE( seed, pipelineIndirectDeviceAddressInfoNV.vkPipeline );
       return seed;
     }
   };
@@ -12776,7 +12776,7 @@ namespace std
       std::size_t seed = 0;
       VULKAN_HPP_HASH_COMBINE( seed, pipelineInfoKHR.sType );
       VULKAN_HPP_HASH_COMBINE( seed, pipelineInfoKHR.pNext );
-      VULKAN_HPP_HASH_COMBINE( seed, pipelineInfoKHR.pipeline );
+      VULKAN_HPP_HASH_COMBINE( seed, pipelineInfoKHR.vkPipeline );
       return seed;
     }
   };

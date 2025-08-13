@@ -1,7 +1,7 @@
 #pragma once
 #include "../config.h"
 
-namespace vkInit {
+namespace init {
     struct QueueFamilyIndices {
         uint32_t graphicsFamily;
         uint32_t presentFamily;
