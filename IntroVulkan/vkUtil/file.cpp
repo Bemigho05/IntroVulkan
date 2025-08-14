@@ -1,5 +1,7 @@
 #include "file.h"
 
+#include <filesystem>
+
 std::vector<char> vkUtil::readFile(const std::string& filename)
 {
 	std::ifstream file(filename, std::ios::ate | std::ios::binary);

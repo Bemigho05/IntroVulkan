@@ -11,7 +11,7 @@ void init::transitionImageLayout(const TransitionImageLayout& transition)
 		.newLayout = transition.new_layout,
 		.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
 		.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
-		.image = transition.swapchainImages[transition.currentFrame].get(),
+		.image = transition.swapchainImages[transition.imageIndex].get(),
 		.subresourceRange = {
 			.aspectMask = vk::ImageAspectFlagBits::eColor,
 			.baseMipLevel = 0,

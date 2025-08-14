@@ -4,7 +4,7 @@
 namespace init {
 
 	struct TransitionImageLayout {
-		uint32_t currentFrame;
+		uint32_t imageIndex;
 		vk::ImageLayout old_layout;
 		vk::ImageLayout new_layout;
 		vk::AccessFlags2 src_access_mask;

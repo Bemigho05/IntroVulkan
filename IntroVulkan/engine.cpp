@@ -16,6 +16,7 @@ Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> 
     setupDevice();
     createSwapchain();
     createImageViews();
+    createGraphicsPipeline();
 }
 
 Engine::~Engine()
@@ -166,15 +167,34 @@ void Engine::createGraphicsPipeline()
 
 }
 
+void Engine::createCommandPool()
+{
+    vk::CommandPoolCreateInfo poolInfo{
+        .flags = vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+        .queueFamilyIndex = graphicsFamily
+    };
+
+    commandPool = vk::raii::CommandPool(device, poolInfo);
+
+}
+
+void Engine::createCommandBuffer()
+{
+    vk::CommandBufferAllocateInfo allocInfo{ 
+        .commandPool = commandPool, .level = vk::CommandBufferLevel::ePrimary, .commandBufferCount = 1 };
+
+    commandBuffer = std::move(vk::raii::CommandBuffers(device, allocInfo).front());
+}
+
 void Engine::recordCommandBuffer(uint32_t imageIndex)
 {
     commandBuffer.begin({});
 
     init::TransitionImageLayout transitionParams = {
-        .currentFrame = imageIndex,
+        .imageIndex = imageIndex,
         .old_layout = vk::ImageLayout::eUndefined,
         .new_layout = vk::ImageLayout::eColorAttachmentOptimal,
-        .src_access_mask = {},
+        .src_access_mask = {}, // no need to wait for previous operations
         .dst_access_mask = vk::AccessFlagBits2::eColorAttachmentWrite,
         .src_stage_mask = vk::PipelineStageFlagBits2::eTopOfPipe,
         .dst_stage_mask = vk::PipelineStageFlagBits2::eColorAttachmentOutput,
@@ -194,15 +214,21 @@ void Engine::recordCommandBuffer(uint32_t imageIndex)
     };
 
     vk::RenderingInfo renderingInfo = {
-        .renderArea = { .offset = {0, 0}, .extent = swapChainExtent },
+        .renderArea = 
+        { .offset = {0, 0}, .extent = swapChainExtent },
         .layerCount = 1,
         .colorAttachmentCount = 1,
         .pColorAttachments = &attachmentInfo
     };
 
     commandBuffer.beginRendering(renderingInfo);
+    commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, graphicsPipeline);
 
-    // rendering goes here
+
+    commandBuffer.setViewport(0, vk::Viewport(0.0f, 0.0f, static_cast<float>(swapChainExtent.width), static_cast<float>(swapChainExtent.height), 0.0f, 1.0f));
+    commandBuffer.setScissor(0, vk::Rect2D(vk::Offset2D(0, 0), swapChainExtent));
+
+    commandBuffer.draw(3, 1, 0, 0);
 
     commandBuffer.endRendering();
 

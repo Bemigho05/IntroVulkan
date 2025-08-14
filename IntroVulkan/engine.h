@@ -17,6 +17,8 @@ private:
     void setupDevice();
     void createImageViews();
     void createGraphicsPipeline();
+    void createCommandPool();
+    void createCommandBuffer();
     void recordCommandBuffer(uint32_t imageIndex);
 
 
@@ -41,6 +43,7 @@ private:
     vk::raii::PipelineLayout pipelineLayout = nullptr;
     vk::raii::Pipeline graphicsPipeline = nullptr;
     vk::raii::CommandBuffer commandBuffer = nullptr;
+    vk::raii::CommandPool commandPool = nullptr;
 
   
 };

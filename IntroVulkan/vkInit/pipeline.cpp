@@ -53,7 +53,7 @@ vk::raii::Pipeline init::createGraphicsPipeline(const vk::raii::Device& device, 
 
 	
 
-	auto shaderModule = createShaderModule(vkUtil::readFile("shader/slang.spv"), device);
+	auto shaderModule = createShaderModule(vkUtil::readFile("shaders/slang.spv"), device);
 	vk::PipelineShaderStageCreateInfo vertexShaderStageInfo{
 		.stage = vk::ShaderStageFlagBits::eVertex, .module = shaderModule, .pName = "vertMain" };
 	vk::PipelineShaderStageCreateInfo fragmentShaderStageInfo{
