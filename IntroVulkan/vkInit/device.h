@@ -11,8 +11,11 @@ namespace init {
         vk::KHRSwapchainExtensionName,
         vk::KHRSpirv14ExtensionName,
         vk::KHRSynchronization2ExtensionName,
-        vk::KHRCreateRenderpass2ExtensionName
+        vk::KHRCreateRenderpass2ExtensionName,
+        vk::KHRShaderDrawParametersExtensionName
     };
+
+
 
     vk::raii::PhysicalDevice getPhysicalDevice(const vk::raii::Instance& instance);
     vk::raii::Device createLogicalDevice(const vk::raii::PhysicalDevice& physicalDevice, uint32_t graphicsFamily);

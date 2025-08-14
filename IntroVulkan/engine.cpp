@@ -17,19 +17,62 @@ Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> 
     createSwapchain();
     createImageViews();
     createGraphicsPipeline();
+    createCommandPool();
+    createCommandBuffer();
+    createSyncObjects();
 }
 
 Engine::~Engine()
 {
+
 }
 
 void Engine::render()
 {
+
+    graphicsQueue.waitIdle();
+
+    auto [result, imageIndex] = swapChain.acquireNextImage(UINT64_MAX, *presentCompleteSemaphore, nullptr);
+
+    recordCommandBuffer(imageIndex);
+
+    device.resetFences(*drawFence);
+
+    vk::PipelineStageFlags waitDestinationStageMask(vk::PipelineStageFlagBits::eColorAttachmentOutput);
+    const vk::SubmitInfo submitInfo{ .waitSemaphoreCount = 1, .pWaitSemaphores = &*presentCompleteSemaphore, 
+        .pWaitDstStageMask = &waitDestinationStageMask, .commandBufferCount = 1,
+        .pCommandBuffers = &*commandBuffer, .signalSemaphoreCount = 1, .pSignalSemaphores = &*renderFinishedSemaphore };
+
+    graphicsQueue.submit(submitInfo, *drawFence);
+    while (vk::Result::eTimeout == device.waitForFences(*drawFence, vk::True, UINT64_MAX));
+
+    const vk::PresentInfoKHR presentInfoKHR{ 
+        .waitSemaphoreCount = 1, .pWaitSemaphores = &*renderFinishedSemaphore, 
+        .swapchainCount = 1, .pSwapchains = &*swapChain, .pImageIndices = &imageIndex };
+
+    result = graphicsQueue.presentKHR(presentInfoKHR);
+    switch (result)
+    {
+    case vk::Result::eSuccess: break;
+    case vk::Result::eSuboptimalKHR: std::cout << "vk::Queue::presentKHR returned vk::Result::eSuboptimalKHR!\n"; break;
+    default:
+        break;
+    }
+
 }
 
 void Engine::present()
 {
+
+
 }
+
+void Engine::exit()
+{
+    device.waitIdle();
+}
+
+
 
 void Engine::createInstance() {
     vk::ApplicationInfo appInfo{
@@ -169,12 +212,9 @@ void Engine::createGraphicsPipeline()
 
 void Engine::createCommandPool()
 {
-    vk::CommandPoolCreateInfo poolInfo{
-        .flags = vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-        .queueFamilyIndex = graphicsFamily
-    };
-
-    commandPool = vk::raii::CommandPool(device, poolInfo);
+    vk::CommandPoolCreateInfo poolInfo{ 
+        .flags = vk::CommandPoolCreateFlagBits::eResetCommandBuffer, .queueFamilyIndex = graphicsFamily };
+    commandPool = std::move(vk::raii::CommandPool(device, poolInfo));
 
 }
 
@@ -184,6 +224,13 @@ void Engine::createCommandBuffer()
         .commandPool = commandPool, .level = vk::CommandBufferLevel::ePrimary, .commandBufferCount = 1 };
 
     commandBuffer = std::move(vk::raii::CommandBuffers(device, allocInfo).front());
+}
+
+void Engine::createSyncObjects()
+{
+    presentCompleteSemaphore = vk::raii::Semaphore(device, vk::SemaphoreCreateInfo());
+    renderFinishedSemaphore = vk::raii::Semaphore(device, vk::SemaphoreCreateInfo());
+    drawFence = vk::raii::Fence(device, { .flags = vk::FenceCreateFlagBits::eSignaled });
 }
 
 void Engine::recordCommandBuffer(uint32_t imageIndex)
@@ -223,7 +270,6 @@ void Engine::recordCommandBuffer(uint32_t imageIndex)
 
     commandBuffer.beginRendering(renderingInfo);
     commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, graphicsPipeline);
-
 
     commandBuffer.setViewport(0, vk::Viewport(0.0f, 0.0f, static_cast<float>(swapChainExtent.width), static_cast<float>(swapChainExtent.height), 0.0f, 1.0f));
     commandBuffer.setScissor(0, vk::Rect2D(vk::Offset2D(0, 0), swapChainExtent));

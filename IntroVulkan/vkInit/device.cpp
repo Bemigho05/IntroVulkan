@@ -35,11 +35,14 @@ vk::raii::Device init::createLogicalDevice(const vk::raii::PhysicalDevice& physi
         .pQueuePriorities = &queuePriority
     };
 
+
     vk::StructureChain<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceVulkan13Features, vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT> featureChain = {
-       {},
-       {.dynamicRendering = true},
-       {.extendedDynamicState = true}
+        {},                                                     // vk::PhysicalDeviceFeatures2
+        {.synchronization2 = true, .dynamicRendering = true },  // vk::PhysicalDeviceVulkan13Features
+        {.extendedDynamicState = true }                         // vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT
     };
+   
+    
 
     vk::DeviceCreateInfo deviceCreateInfo{
          .pNext = &featureChain.get<vk::PhysicalDeviceFeatures2>(),

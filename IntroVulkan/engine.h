@@ -8,6 +8,7 @@ public:
 
     void render();
     void present();
+    void exit();
 
 private:
     void createInstance();
@@ -19,6 +20,7 @@ private:
     void createGraphicsPipeline();
     void createCommandPool();
     void createCommandBuffer();
+    void createSyncObjects();
     void recordCommandBuffer(uint32_t imageIndex);
 
 
@@ -42,8 +44,13 @@ private:
     vk::Extent2D swapChainExtent;
     vk::raii::PipelineLayout pipelineLayout = nullptr;
     vk::raii::Pipeline graphicsPipeline = nullptr;
-    vk::raii::CommandBuffer commandBuffer = nullptr;
+
     vk::raii::CommandPool commandPool = nullptr;
+    vk::raii::CommandBuffer commandBuffer = nullptr;
+    
+    vk::raii::Semaphore presentCompleteSemaphore = nullptr;
+    vk::raii::Semaphore renderFinishedSemaphore = nullptr;
+    vk::raii::Fence drawFence = nullptr;
 
   
 };

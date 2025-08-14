@@ -52,4 +52,6 @@ void App::run()
 		graphicsEngine->present();
 		calculateFrameRate();
 	}
+
+	graphicsEngine->exit();
 }
