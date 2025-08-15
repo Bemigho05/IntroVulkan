@@ -6,7 +6,7 @@
 
 class App {
 private:
-	std::unique_ptr<Engine> graphicsEngine;
+	std::shared_ptr<Engine> graphicsEngine;
 	std::shared_ptr<GLFWwindow> window;
 
 	double lastTime, currentTime;
@@ -15,10 +15,12 @@ private:
 
 	void initWindow(const int& width, const int& height);
 	void calculateFrameRate();
+	
 
 public:
 	App(const int& width, const int& height);
 	~App();
 	void run();
+	std::shared_ptr<Engine> getEngine();
 };
 

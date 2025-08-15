@@ -6,9 +6,10 @@ public:
     Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> window);
     ~Engine();
 
-    void render();
-    void present();
+    void drawFrame();
     void exit();
+
+    bool framebufferResized = false;
 
 private:
     void createInstance();
@@ -19,9 +20,11 @@ private:
     void createImageViews();
     void createGraphicsPipeline();
     void createCommandPool();
-    void createCommandBuffer();
+    void createCommandBuffers();
     void createSyncObjects();
     void recordCommandBuffer(uint32_t imageIndex);
+    void cleanupSwapChain();
+    void recreateSwapchain();
 
 
     std::shared_ptr<GLFWwindow> window = nullptr;
@@ -46,11 +49,15 @@ private:
     vk::raii::Pipeline graphicsPipeline = nullptr;
 
     vk::raii::CommandPool commandPool = nullptr;
-    vk::raii::CommandBuffer commandBuffer = nullptr;
+    std::vector<vk::raii::CommandBuffer> commandBuffers;
     
-    vk::raii::Semaphore presentCompleteSemaphore = nullptr;
-    vk::raii::Semaphore renderFinishedSemaphore = nullptr;
-    vk::raii::Fence drawFence = nullptr;
+    std::vector<vk::raii::Semaphore> presentCompleteSemaphores;
+    std::vector<vk::raii::Semaphore> renderFinishedSemaphores;
+    std::vector<vk::raii::Fence> inFlightFences;
 
+    uint32_t currentFrame = 0;
+    uint32_t semaphoreIndex = 0;
+
+   
   
 };

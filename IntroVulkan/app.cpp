@@ -1,19 +1,26 @@
 #include "app.h"
 
 static auto destroyGLFWwidow = [](GLFWwindow* window) noexcept {
-	if (window) {
-		glfwDestroyWindow(window);
-	}
-	};
+	if (window) { glfwDestroyWindow(window); }
+};
+
+
+
+static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+    auto app = reinterpret_cast<App*>(glfwGetWindowUserPointer(window));
+    if (app && app->getEngine()) { app->getEngine()->framebufferResized = true; }
+}
 
 void App::initWindow(const int& width, const int& height)
 {
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	window.reset(glfwCreateWindow(width, height, "VULKAN ENGINE", nullptr, nullptr), destroyGLFWwidow);
+	glfwSetWindowUserPointer(window.get(), this);
+	glfwSetFramebufferSizeCallback(window.get(), framebufferResizeCallback);
+
 }
 
 void App::calculateFrameRate()
@@ -33,10 +40,11 @@ void App::calculateFrameRate()
 	++numFrames;
 }
 
+
 App::App(const int& width, const int& height)
 {
 	initWindow(width, height);
-	graphicsEngine = std::make_unique<Engine>(width, height, window);
+	graphicsEngine = std::make_shared<Engine>(width, height, window);
 
 }
 
@@ -48,10 +56,15 @@ void App::run()
 {
 	while (!glfwWindowShouldClose(window.get())) {
 		glfwPollEvents();
-		graphicsEngine->render();
-		graphicsEngine->present();
+		graphicsEngine->drawFrame();
 		calculateFrameRate();
 	}
 
 	graphicsEngine->exit();
 }
+
+std::shared_ptr<Engine> App::getEngine()
+{
+	return graphicsEngine;
+}
+
