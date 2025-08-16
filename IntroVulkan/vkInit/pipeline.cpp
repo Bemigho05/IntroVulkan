@@ -1,5 +1,6 @@
 #include "pipeline.h"
 #include "../vkUtil/file.h"
+#include "vertex.h"
 
 
 vk::raii::Pipeline init::createGraphicsPipeline(const vk::raii::Device& device, const vk::raii::PipelineLayout& pipelineLayout, const vk::Format& swapChainImageFormat, const vk::Extent2D& swapChainExtent) {
@@ -13,7 +14,11 @@ vk::raii::Pipeline init::createGraphicsPipeline(const vk::raii::Device& device, 
 		.pDynamicStates = dynamicStates.data()
 	};
 
-	vk::PipelineVertexInputStateCreateInfo vertexInputInfo;
+	auto bindingDescription = init::Vertex::getBindingDescription();
+	auto attributeDescription = init::Vertex::getAttributeDescriptions();
+	vk::PipelineVertexInputStateCreateInfo vertexInputInfo{ .vertexBindingDescriptionCount = 1, .pVertexBindingDescriptions = &bindingDescription,
+		.vertexAttributeDescriptionCount = attributeDescription.size(), .pVertexAttributeDescriptions = attributeDescription.data() };
+
 	vk::PipelineInputAssemblyStateCreateInfo inputAssembly{ .topology = vk::PrimitiveTopology::eTriangleList };
 
 	vk::Viewport viewport { 0.0f, 0.0f, static_cast<float>(swapChainExtent.width), static_cast<float>(swapChainExtent.height), 0.0f, 1.0f };
@@ -21,12 +26,9 @@ vk::raii::Pipeline init::createGraphicsPipeline(const vk::raii::Device& device, 
 
 	vk::PipelineViewportStateCreateInfo viewportState{ .viewportCount = 1, .scissorCount = 1 };
 	
-	vk::PipelineRasterizationStateCreateInfo rasterizer{
-		.depthClampEnable = vk::False, .rasterizerDiscardEnable = vk::False, 
-		.polygonMode = vk::PolygonMode::eFill, .cullMode = vk::CullModeFlagBits::eBack, 
-		.frontFace = vk::FrontFace::eClockwise, .depthBiasClamp = vk::False,
-		.depthBiasSlopeFactor = 1.0f, .lineWidth = 1.0f
-	};
+	vk::PipelineRasterizationStateCreateInfo rasterizer{ .depthClampEnable = vk::False, .rasterizerDiscardEnable = vk::False,
+		.polygonMode = vk::PolygonMode::eFill, .cullMode = vk::CullModeFlagBits::eBack, .frontFace = vk::FrontFace::eClockwise, .depthBiasClamp = vk::False,
+		.depthBiasSlopeFactor = 1.0f, .lineWidth = 1.0f };
 
 	vk::PipelineMultisampleStateCreateInfo multisampling{
 		.rasterizationSamples = vk::SampleCountFlagBits::e1,

@@ -5,6 +5,8 @@
 #include "vkInit/pipeline.h"
 #include "vkUtil/file.h"
 #include "vkInit/image.h"
+#include "vkInit/vertex.h"
+#include "vkInit/memory.h"
 
 
 Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> window)
@@ -18,6 +20,7 @@ Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> 
     createImageViews();
     createGraphicsPipeline();
     createCommandPool();
+    createVertexBuffer();
     createCommandBuffers();
     createSyncObjects();
 }
@@ -202,7 +205,7 @@ void Engine::createImageViews()
         .subresourceRange = { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1}
     };
 
-    for (auto image : swapChainImages) { 
+    for (const auto image : swapChainImages) { 
         imageViewCreateInfo.image = image; 
         swapChainImageViews.emplace_back(device, imageViewCreateInfo);
     }
@@ -283,7 +286,8 @@ void Engine::recordCommandBuffer(uint32_t imageIndex)
     };
 
     commandBuffers[currentFrame].beginRendering(renderingInfo);
-    commandBuffers[currentFrame].bindPipeline(vk::PipelineBindPoint::eGraphics, graphicsPipeline);
+    commandBuffers[currentFrame].bindPipeline(vk::PipelineBindPoint::eGraphics, *graphicsPipeline);
+    commandBuffers[currentFrame].bindVertexBuffers(0, *vertexBuffer, { 0 });
 
     commandBuffers[currentFrame].setViewport(0, vk::Viewport(0.0f, 0.0f, static_cast<float>(swapChainExtent.width), static_cast<float>(swapChainExtent.height), 0.0f, 1.0f));
     commandBuffers[currentFrame].setScissor(0, vk::Rect2D(vk::Offset2D(0, 0), swapChainExtent));
@@ -325,4 +329,33 @@ void Engine::recreateSwapchain()
 
     createSwapchain();
     createImageViews();
+}
+
+
+void Engine::createVertexBuffer()
+{
+    const std::vector<init::Vertex> vertices = {
+        {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+        {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}} };
+
+    vk::BufferCreateInfo bufferInfo{ .flags = vk::BufferCreateFlags(), .size = sizeof(vertices[0]) * vertices.size(),
+        .usage = vk::BufferUsageFlagBits::eVertexBuffer, .sharingMode = vk::SharingMode::eExclusive };
+
+
+    vertexBuffer = vk::raii::Buffer(device, bufferInfo);
+
+    vk::MemoryRequirements memRequirements = vertexBuffer.getMemoryRequirements();
+
+    vk::MemoryAllocateInfo memoryAllocateInfo = {
+        .allocationSize = memRequirements.size, .memoryTypeIndex = init::findMemoryType({.typeFilter = memRequirements.memoryTypeBits, 
+            .properties = vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, .physicalDevice = physicalDevice})
+    };
+
+    vertexBufferMemory = vk::raii::DeviceMemory(device, memoryAllocateInfo);
+
+    vertexBuffer.bindMemory(*vertexBufferMemory, 0);
+    void* data = vertexBufferMemory.mapMemory(0, bufferInfo.size);
+    memcpy(data, vertices.data(), bufferInfo.size);
+    vertexBufferMemory.unmapMemory();
 }

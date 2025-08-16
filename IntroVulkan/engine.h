@@ -25,6 +25,7 @@ private:
     void recordCommandBuffer(uint32_t imageIndex);
     void cleanupSwapChain();
     void recreateSwapchain();
+    void createVertexBuffer();
 
 
     std::shared_ptr<GLFWwindow> window = nullptr;
@@ -54,6 +55,11 @@ private:
     std::vector<vk::raii::Semaphore> presentCompleteSemaphores;
     std::vector<vk::raii::Semaphore> renderFinishedSemaphores;
     std::vector<vk::raii::Fence> inFlightFences;
+
+
+    vk::raii::Buffer vertexBuffer = nullptr;
+    vk::raii::DeviceMemory vertexBufferMemory = nullptr;
+    
 
     uint32_t currentFrame = 0;
     uint32_t semaphoreIndex = 0;

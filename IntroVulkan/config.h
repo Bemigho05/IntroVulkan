@@ -11,6 +11,7 @@
 #include <limits>
 #include <cstdint>
 #include <fstream>
+#include <array>
 
 
 #define VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
@@ -19,5 +20,7 @@
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+
+#include <glm/glm.hpp>
 
 constexpr int MAX_FRAMES_IN_FLIGHT = 3;
