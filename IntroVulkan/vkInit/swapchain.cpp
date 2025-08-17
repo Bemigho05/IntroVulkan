@@ -23,12 +23,14 @@ init::Swapchain init::createSwapchain(std::shared_ptr<GLFWwindow> window, const 
     };
     auto queueFamilyIndices = init::getQueueFamilyIndices(physicalDevice, surface);
 
-    auto graphicsFamily = queueFamilyIndices.graphicsFamily;
-    auto presentFamily = queueFamilyIndices.presentFamily;
+    auto graphicsFamilyIndex = queueFamilyIndices.graphicsFamilyIndex;
+    auto presentFamilyIndex = queueFamilyIndices.presentFamilyIndex;
+    auto transferFamilyIndex = queueFamilyIndices.transferFamilyIndex;
+    
 
-    uint32_t pqueueFamilyIndices[] = { graphicsFamily, presentFamily };
+    uint32_t pqueueFamilyIndices[] = { graphicsFamilyIndex, presentFamilyIndex, transferFamilyIndex };
 
-    if (graphicsFamily != presentFamily) {
+    if (graphicsFamilyIndex != presentFamilyIndex) {
         swapChainCreateInfo.imageSharingMode = vk::SharingMode::eConcurrent;
         swapChainCreateInfo.queueFamilyIndexCount = 2;
         swapChainCreateInfo.pQueueFamilyIndices = pqueueFamilyIndices;

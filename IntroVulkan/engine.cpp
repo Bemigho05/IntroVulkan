@@ -187,13 +187,15 @@ void Engine::setupDevice()
 
     auto queueFamilyIndices = init::getQueueFamilyIndices(physicalDevice, surface);
 
-    graphicsFamily = queueFamilyIndices.graphicsFamily;
-    presentFamily = queueFamilyIndices.presentFamily;
+    graphicsFamilyIndex = queueFamilyIndices.graphicsFamilyIndex;
+    presentFamilyIndex = queueFamilyIndices.presentFamilyIndex;
+    transferFamilyIndex = queueFamilyIndices.transferFamilyIndex;
 
-    device = init::createLogicalDevice(physicalDevice, queueFamilyIndices.graphicsFamily);
+    device = init::createLogicalDevice(physicalDevice, queueFamilyIndices.graphicsFamilyIndex, queueFamilyIndices.transferFamilyIndex);
     
-    graphicsQueue = vk::raii::Queue(device, graphicsFamily, 0);
-    presentQueue = vk::raii::Queue(device, presentFamily, 0);
+    graphicsQueue = vk::raii::Queue(device, graphicsFamilyIndex, 0);
+    presentQueue = vk::raii::Queue(device, presentFamilyIndex, 0);
+    transferQueue = vk::raii::Queue(device, transferFamilyIndex, 0);
 }
 
 void Engine::createImageViews()
@@ -223,7 +225,7 @@ void Engine::createGraphicsPipeline()
 void Engine::createCommandPool()
 {
     vk::CommandPoolCreateInfo poolInfo{ 
-        .flags = vk::CommandPoolCreateFlagBits::eResetCommandBuffer, .queueFamilyIndex = graphicsFamily };
+        .flags = vk::CommandPoolCreateFlagBits::eResetCommandBuffer, .queueFamilyIndex = graphicsFamilyIndex };
     commandPool = std::move(vk::raii::CommandPool(device, poolInfo));
 
 }
@@ -339,23 +341,27 @@ void Engine::createVertexBuffer()
         {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
         {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}} };
 
-    vk::BufferCreateInfo bufferInfo{ .flags = vk::BufferCreateFlags(), .size = sizeof(vertices[0]) * vertices.size(),
-        .usage = vk::BufferUsageFlagBits::eVertexBuffer, .sharingMode = vk::SharingMode::eExclusive };
+    vk::DeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+
+ 
+
+    // ask for sharing mode
+    init::createBuffer({ .size = bufferSize, .usage = vk::BufferUsageFlagBits::eTransferSrc, 
+        .sharingMode = vk::SharingMode::eExclusive, .properties = vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent,
+        .buffer = std::ref(stagingBuffer), .bufferMemory = std::ref(stagingBufferMemory), .device = std::ref(device), .physicalDevice = std::ref(physicalDevice) });
+
+    void* data = stagingBufferMemory.mapMemory(0, bufferSize);
+    memcpy(data, vertices.data(), bufferSize);
+    stagingBufferMemory.unmapMemory();
 
 
-    vertexBuffer = vk::raii::Buffer(device, bufferInfo);
 
-    vk::MemoryRequirements memRequirements = vertexBuffer.getMemoryRequirements();
+    init::createBuffer({ .size = bufferSize, .usage = vk::BufferUsageFlagBits::eVertexBuffer | vk::BufferUsageFlagBits::eTransferDst, 
+        .sharingMode = vk::SharingMode::eExclusive, .properties = vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent,
+        .buffer = std::ref(vertexBuffer), .bufferMemory = std::ref(vertexBufferMemory), .device = std::ref(device), .physicalDevice = std::ref(physicalDevice) });
+    
 
-    vk::MemoryAllocateInfo memoryAllocateInfo = {
-        .allocationSize = memRequirements.size, .memoryTypeIndex = init::findMemoryType({.typeFilter = memRequirements.memoryTypeBits, 
-            .properties = vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, .physicalDevice = physicalDevice})
-    };
+    init::copyBuffer({ .size = bufferSize, .dstBuffer = std::ref(vertexBuffer), .srcBuffer = std::ref(stagingBuffer),
+        .commandPool = std::ref(commandPool), .device = std::ref(device), .graphicsQueue = std::ref(graphicsQueue) });
 
-    vertexBufferMemory = vk::raii::DeviceMemory(device, memoryAllocateInfo);
-
-    vertexBuffer.bindMemory(*vertexBufferMemory, 0);
-    void* data = vertexBufferMemory.mapMemory(0, bufferInfo.size);
-    memcpy(data, vertices.data(), bufferInfo.size);
-    vertexBufferMemory.unmapMemory();
 }

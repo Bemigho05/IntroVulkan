@@ -26,14 +26,16 @@ vk::raii::PhysicalDevice init::getPhysicalDevice(const vk::raii::Instance& insta
     else { throw std::runtime_error("failed to find a suitable GPU!"); }
 }
 
-vk::raii::Device init::createLogicalDevice(const vk::raii::PhysicalDevice& physicalDevice, uint32_t graphicsFamily)
+vk::raii::Device init::createLogicalDevice(const vk::raii::PhysicalDevice& physicalDevice, uint32_t graphicsFamilyIndex, uint32_t transferFamilyIndex)
 {
-    float queuePriority = 0.0f;
-    vk::DeviceQueueCreateInfo deviceQueueCreateInfo{
-        .queueFamilyIndex = graphicsFamily,
-        .queueCount = 1,
-        .pQueuePriorities = &queuePriority
-    };
+    float queuePriority = 1.0f;
+   
+    std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
+
+    queueCreateInfos.push_back({ .queueFamilyIndex = graphicsFamilyIndex, .queueCount = 1, .pQueuePriorities = &queuePriority });
+
+    if (transferFamilyIndex != graphicsFamilyIndex)
+        queueCreateInfos.push_back({ .queueFamilyIndex = transferFamilyIndex, .queueCount = 1, .pQueuePriorities = &queuePriority });
 
 
     vk::StructureChain<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceVulkan13Features, vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT> featureChain = {
@@ -46,8 +48,8 @@ vk::raii::Device init::createLogicalDevice(const vk::raii::PhysicalDevice& physi
 
     vk::DeviceCreateInfo deviceCreateInfo{
          .pNext = &featureChain.get<vk::PhysicalDeviceFeatures2>(),
-         .queueCreateInfoCount = 1,
-         .pQueueCreateInfos = &deviceQueueCreateInfo,
+         .queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size()),
+         .pQueueCreateInfos = queueCreateInfos.data(),
          .enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size()),
          .ppEnabledExtensionNames = deviceExtensions.data()
     };
@@ -63,32 +65,49 @@ init::QueueFamilyIndices init::getQueueFamilyIndices(const vk::raii::PhysicalDev
         });
     assert(graphicsQueuFamilyProperty != queueFamilyPropeties.end() && "No graphics queue family found!");
 
-    auto graphicsFamily =  static_cast<uint32_t>(std::distance(queueFamilyPropeties.begin(), graphicsQueuFamilyProperty));
+    uint32_t transferFamilyIndex = queueFamilyPropeties.size();
 
-    auto presentFamily = physicalDevice.getSurfaceSupportKHR(graphicsFamily, *surface) ? graphicsFamily : static_cast<uint32_t>(queueFamilyPropeties.size());
+    auto graphicsFamilyIndex =  static_cast<uint32_t>(std::distance(queueFamilyPropeties.begin(), graphicsQueuFamilyProperty));
 
-    if (presentFamily == queueFamilyPropeties.size()) {
+    auto presentFamilyIndex = physicalDevice.getSurfaceSupportKHR(graphicsFamilyIndex, *surface) ? graphicsFamilyIndex : static_cast<uint32_t>(queueFamilyPropeties.size());
+
+    if (presentFamilyIndex == queueFamilyPropeties.size()) {
         for (size_t i = 0; i < queueFamilyPropeties.size(); i++) {
             if ((queueFamilyPropeties[i].queueFlags & vk::QueueFlagBits::eGraphics) &&
                 physicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(i), *surface)) {
-                graphicsFamily = static_cast<uint32_t>(i);
-                presentFamily = graphicsFamily;
+                graphicsFamilyIndex = static_cast<uint32_t>(i);
+                presentFamilyIndex = graphicsFamilyIndex;
                 break;
             }
         }
-        if (presentFamily == queueFamilyPropeties.size()) {
+        if (presentFamilyIndex == queueFamilyPropeties.size()) {
             for (size_t i = 0; i < queueFamilyPropeties.size(); i++) {
                 if (physicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(i), *surface)) {
-                    presentFamily = static_cast<uint32_t>(i);
+                    presentFamilyIndex = static_cast<uint32_t>(i);
                     break;
                 }
             }
         }
     }
-    if ((graphicsFamily == queueFamilyPropeties.size()) || (presentFamily == queueFamilyPropeties.size())) {
+
+    for (size_t i = 0; i < queueFamilyPropeties.size(); i++) {
+        if ((queueFamilyPropeties[i].queueFlags & vk::QueueFlagBits::eTransfer) && (queueFamilyPropeties[i].queueFlags & vk::QueueFlagBits::eGraphics)
+            && graphicsFamilyIndex == presentFamilyIndex) {
+            transferFamilyIndex = graphicsFamilyIndex;
+            break;
+        }
+    }
+    if (transferFamilyIndex == queueFamilyPropeties.size()) {
+        for (size_t i = 0; i < queueFamilyPropeties.size(); i++) {
+            transferFamilyIndex = static_cast<uint32_t>(i);
+            break;
+        }
+    }
+
+    if ((graphicsFamilyIndex == queueFamilyPropeties.size()) || (presentFamilyIndex == queueFamilyPropeties.size()) || (transferFamilyIndex == queueFamilyPropeties.size())) {
         throw std::runtime_error("Could not find a queue for graphics or present -> terminating");
     }
-    return { graphicsFamily, presentFamily };
+    return { graphicsFamilyIndex, presentFamilyIndex, transferFamilyIndex };
 
 }
 

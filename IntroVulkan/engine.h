@@ -38,9 +38,11 @@ private:
     vk::raii::PhysicalDevice physicalDevice = nullptr;
     vk::raii::Device device = nullptr;
     vk::raii::Queue graphicsQueue = nullptr;
-    uint32_t graphicsFamily;
+    uint32_t graphicsFamilyIndex;
     vk::raii::Queue presentQueue = nullptr;
-    uint32_t presentFamily;
+    uint32_t presentFamilyIndex;
+    vk::raii::Queue transferQueue = nullptr;
+    uint32_t transferFamilyIndex;
     vk::raii::SwapchainKHR swapChain = nullptr;
     std::vector<vk::Image> swapChainImages;
     std::vector<vk::raii::ImageView> swapChainImageViews;
@@ -56,6 +58,8 @@ private:
     std::vector<vk::raii::Semaphore> renderFinishedSemaphores;
     std::vector<vk::raii::Fence> inFlightFences;
 
+    vk::raii::Buffer stagingBuffer = nullptr;
+    vk::raii::DeviceMemory stagingBufferMemory = nullptr;
 
     vk::raii::Buffer vertexBuffer = nullptr;
     vk::raii::DeviceMemory vertexBufferMemory = nullptr;
