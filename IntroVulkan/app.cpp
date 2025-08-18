@@ -29,7 +29,7 @@ void App::calculateFrameRate()
 	auto delta = currentTime - lastTime;
 
 	if (delta >= 1) {
-		auto framerate = std::max(1, int(numFrames / delta));
+		auto framerate = std::max(1.0f, float(numFrames / delta));
 		std::stringstream title{}; title << "Running at " << framerate << " fps.";
 		glfwSetWindowTitle(window.get(), title.str().c_str());
 		lastTime = currentTime;

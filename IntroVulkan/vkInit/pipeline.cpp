@@ -3,7 +3,7 @@
 #include "vertex.h"
 
 
-vk::raii::Pipeline init::createGraphicsPipeline(const vk::raii::Device& device, const vk::raii::PipelineLayout& pipelineLayout, const vk::Format& swapChainImageFormat, const vk::Extent2D& swapChainExtent) {
+vk::raii::Pipeline init::createGraphicsPipeline(const CreateGraphicsPipeline& input) {
 	std::vector dynamicStates = {
 		vk::DynamicState::eViewport,
 		vk::DynamicState::eScissor
@@ -17,17 +17,17 @@ vk::raii::Pipeline init::createGraphicsPipeline(const vk::raii::Device& device, 
 	auto bindingDescription = init::Vertex::getBindingDescription();
 	auto attributeDescription = init::Vertex::getAttributeDescriptions();
 	vk::PipelineVertexInputStateCreateInfo vertexInputInfo{ .vertexBindingDescriptionCount = 1, .pVertexBindingDescriptions = &bindingDescription,
-		.vertexAttributeDescriptionCount = attributeDescription.size(), .pVertexAttributeDescriptions = attributeDescription.data() };
+		.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescription.size()), .pVertexAttributeDescriptions = attributeDescription.data() };
 
 	vk::PipelineInputAssemblyStateCreateInfo inputAssembly{ .topology = vk::PrimitiveTopology::eTriangleList };
 
-	vk::Viewport viewport { 0.0f, 0.0f, static_cast<float>(swapChainExtent.width), static_cast<float>(swapChainExtent.height), 0.0f, 1.0f };
-	vk::Rect2D scissor{ vk::Offset2D{0, 0}, swapChainExtent };
+	vk::Viewport viewport { 0.0f, 0.0f, static_cast<float>(input.swapChainExtent.get().width), static_cast<float>(input.swapChainExtent.get().height), 0.0f, 1.0f};
+	vk::Rect2D scissor{ vk::Offset2D{0, 0}, input.swapChainExtent.get() };
 
 	vk::PipelineViewportStateCreateInfo viewportState{ .viewportCount = 1, .scissorCount = 1 };
 	
 	vk::PipelineRasterizationStateCreateInfo rasterizer{ .depthClampEnable = vk::False, .rasterizerDiscardEnable = vk::False,
-		.polygonMode = vk::PolygonMode::eFill, .cullMode = vk::CullModeFlagBits::eBack, .frontFace = vk::FrontFace::eClockwise, .depthBiasClamp = vk::False,
+		.polygonMode = vk::PolygonMode::eFill, .cullMode = vk::CullModeFlagBits::eBack, .frontFace = vk::FrontFace::eCounterClockwise, .depthBiasClamp = vk::False,
 		.depthBiasSlopeFactor = 1.0f, .lineWidth = 1.0f };
 
 	vk::PipelineMultisampleStateCreateInfo multisampling{
@@ -53,9 +53,7 @@ vk::raii::Pipeline init::createGraphicsPipeline(const vk::raii::Device& device, 
 
 	vk::PipelineColorBlendStateCreateInfo colorBlending{ .logicOpEnable = vk::False, .logicOp = vk::LogicOp::eCopy, .attachmentCount = 1, .pAttachments = &colorBlendAttachment };
 
-	
-
-	auto shaderModule = createShaderModule(vkUtil::readFile("shaders/slang.spv"), device);
+	auto shaderModule = createShaderModule(vkUtil::readFile("shaders/slang.spv"), input.device.get());
 	vk::PipelineShaderStageCreateInfo vertexShaderStageInfo{
 		.stage = vk::ShaderStageFlagBits::eVertex, .module = shaderModule, .pName = "vertMain" };
 	vk::PipelineShaderStageCreateInfo fragmentShaderStageInfo{
@@ -63,17 +61,16 @@ vk::raii::Pipeline init::createGraphicsPipeline(const vk::raii::Device& device, 
 	vk::PipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, fragmentShaderStageInfo };
 
 
-	vk::PipelineRenderingCreateInfo pipelineRenderingCreateInfo{ .colorAttachmentCount = 1, .pColorAttachmentFormats = &swapChainImageFormat };
+	vk::PipelineRenderingCreateInfo pipelineRenderingCreateInfo{ .colorAttachmentCount = 1, .pColorAttachmentFormats = &input.swapChainImageFormat.get()};
 	vk::GraphicsPipelineCreateInfo pipelineInfo{ .pNext = &pipelineRenderingCreateInfo,
 		.stageCount = 2, .pStages = shaderStages,
 		.pVertexInputState = &vertexInputInfo, .pInputAssemblyState = &inputAssembly,
 		.pViewportState = &viewportState, .pRasterizationState = &rasterizer, .pMultisampleState = &multisampling,
-		.pColorBlendState = &colorBlending,  .pDynamicState = &dynamicState, .layout = pipelineLayout, .renderPass = nullptr, // if any error persist fix layout pointer
+		.pColorBlendState = &colorBlending,  .pDynamicState = &dynamicState, .layout = *input.graphicsPipelineLayout.get(), .renderPass = nullptr, // if any error persist fix layout pointer
 		.basePipelineHandle = VK_NULL_HANDLE, .basePipelineIndex = -1 // Optional: This line is optional
 	};
 
-	return vk::raii::Pipeline(device, nullptr, pipelineInfo);
-
+	return vk::raii::Pipeline(input.device.get(), nullptr, pipelineInfo);
 }
 
 vk::raii::ShaderModule init::createShaderModule(const std::vector<char>& code, const vk::raii::Device& device)
@@ -88,8 +85,9 @@ vk::raii::ShaderModule init::createShaderModule(const std::vector<char>& code, c
 	return shaderModule;
 }
 
-vk::raii::PipelineLayout init::createPipelineLayout(const vk::raii::Device& device)
+vk::raii::PipelineLayout init::createPipelineLayout(const CreatePipelineLayout& input)
 {
-	vk::PipelineLayoutCreateInfo pipelineLayoutInfo{ .setLayoutCount = 0, .pushConstantRangeCount = 0 };
-	return vk::raii::PipelineLayout(device, pipelineLayoutInfo);
+	vk::PipelineLayoutCreateInfo pipelineLayoutInfo{ .setLayoutCount = 1, .pSetLayouts = &*input.descriptorSetLayout.get(),
+		.pushConstantRangeCount = 0};
+	return vk::raii::PipelineLayout(input.device.get(), pipelineLayoutInfo);
 }

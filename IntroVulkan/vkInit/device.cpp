@@ -65,7 +65,7 @@ init::QueueFamilyIndices init::getQueueFamilyIndices(const vk::raii::PhysicalDev
         });
     assert(graphicsQueuFamilyProperty != queueFamilyPropeties.end() && "No graphics queue family found!");
 
-    uint32_t transferFamilyIndex = queueFamilyPropeties.size();
+    uint32_t transferFamilyIndex = static_cast<uint32_t>(queueFamilyPropeties.size());
 
     auto graphicsFamilyIndex =  static_cast<uint32_t>(std::distance(queueFamilyPropeties.begin(), graphicsQueuFamilyProperty));
 
