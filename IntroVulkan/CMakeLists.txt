@@ -47,12 +47,14 @@ add_executable(IntroVulkan
     "vkInit/swapchain.cpp" "vkInit/swapchain.h"
     "vkInit/image.cpp" "vkInit/image.h"
     "vkInit/pipeline.cpp" "vkInit/pipeline.h" 
-    "vkUtil/file.h" "vkUtil/file.cpp" "vkInit/vertex.cpp" "vkInit/vertex.h"  "vkInit/memory.h" "vkInit/memory.cpp" "model/model.cpp" "model/model.h")
+    "vkUtil/file.h" "vkUtil/file.cpp" "vkInit/vertex.cpp" "vkInit/vertex.h"  "vkInit/memory.h" "vkInit/memory.cpp" "model/model.cpp" "model/model.h" "vkUtil/single_time.h" "vkUtil/single_time.cpp")
 
 add_dependencies(IntroVulkan Shaders)
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(Stb REQUIRED)
+
 
 if(DEFINED ENV{VULKAN_SDK})
     message(STATUS "Using Vulkan SDK: $ENV{VULKAN_SDK}")

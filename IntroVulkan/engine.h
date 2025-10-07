@@ -26,6 +26,7 @@ private:
     void recordCommandBuffer(uint32_t imageIndex);
     void cleanupSwapChain();
     void recreateSwapchain();
+    void createTextureImage();
     void createVertexBuffer();
     void createIndexBuffer();
     void createUniformBuffers();
@@ -75,6 +76,9 @@ private:
 
     vk::raii::Buffer indexBuffer = nullptr;
     vk::raii::DeviceMemory indexBufferMemory = nullptr;
+
+    vk::raii::Image textureImage = nullptr;
+    vk::raii::DeviceMemory textureImageMemory = nullptr;
 
     // add "void*" later
     vk::raii::DescriptorPool descriptorPool = nullptr;

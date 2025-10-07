@@ -1,4 +1,5 @@
 #include "memory.h"
+#include "../vkUtil/single_time.h"
 
 
 uint32_t init::findMemoryType(const FindMemoryType& input)
@@ -29,17 +30,11 @@ void init::createBuffer(const CreateBuffer& input)
 
 void init::copyBuffer(const CopyBuffer& input)
 {
-	vk::CommandBufferAllocateInfo allocInfo{ .commandPool = input.commandPool.get(), .level = vk::CommandBufferLevel::ePrimary,
-		.commandBufferCount = 1 };
-
-	vk::raii::CommandBuffer commandCopyBuffer = std::move(input.device.get().allocateCommandBuffers(allocInfo).front());
-	commandCopyBuffer.begin(vk::CommandBufferBeginInfo{ .flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit });
+	vk::raii::CommandBuffer commandCopyBuffer = util::beginSingleTimeCommands({ 
+		.device = input.device, .commandPool = input.commandPool, .graphicsQueue = input.graphicsQueue });
 
 	commandCopyBuffer.copyBuffer(input.srcBuffer.get(), input.dstBuffer.get(), vk::BufferCopy(0, 0, input.size));
 
-	commandCopyBuffer.end();
-
-	input.graphicsQueue.get().submit(vk::SubmitInfo{ .commandBufferCount = 1, .pCommandBuffers = &*commandCopyBuffer }, nullptr);
-	input.graphicsQueue.get().waitIdle();
+	util::endSingleTimeCommands({ 
+		.device = input.device, .graphicsQueue = input.graphicsQueue, .commandBuffer = std::ref(commandCopyBuffer) });
 }
-

@@ -12,7 +12,7 @@ namespace init {
 	struct CreateBuffer {
 		vk::DeviceSize size;
 		vk::BufferUsageFlags usage;
-		vk::SharingMode sharingMode;
+		vk::SharingMode sharingMode = vk::SharingMode::eExclusive;
 		vk::MemoryPropertyFlags properties;
 		std::reference_wrapper<vk::raii::Buffer> buffer;
 		std::reference_wrapper<vk::raii::DeviceMemory> bufferMemory;

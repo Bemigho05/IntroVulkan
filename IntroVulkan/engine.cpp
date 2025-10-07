@@ -9,6 +9,9 @@
 #include "vkInit/memory.h"
 #include "model/model.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 
 Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> window)
     : window(window)
@@ -22,6 +25,7 @@ Engine::Engine(const int& width, const int& height, std::shared_ptr<GLFWwindow> 
     createDescriptorSetLayout();
     createGraphicsPipeline();
     createCommandPool();
+    createTextureImage();
     createVertexBuffer();
     createIndexBuffer();
     createUniformBuffers();
@@ -61,8 +65,8 @@ void Engine::drawFrame()
 
     vk::PipelineStageFlags waitDestinationStageMask(vk::PipelineStageFlagBits::eColorAttachmentOutput);
     const vk::SubmitInfo submitInfo{ .waitSemaphoreCount = 1, .pWaitSemaphores = &*presentCompleteSemaphores[semaphoreIndex],
-                        .pWaitDstStageMask = &waitDestinationStageMask, .commandBufferCount = 1, .pCommandBuffers = &*commandBuffers[currentFrame],
-                        .signalSemaphoreCount = 1, .pSignalSemaphores = &*renderFinishedSemaphores[imageIndex] };
+        .pWaitDstStageMask = &waitDestinationStageMask, .commandBufferCount = 1, .pCommandBuffers = &*commandBuffers[currentFrame],
+        .signalSemaphoreCount = 1, .pSignalSemaphores = &*renderFinishedSemaphores[imageIndex] };
     graphicsQueue.submit(submitInfo, *inFlightFences[currentFrame]);
 
 
@@ -274,7 +278,7 @@ void Engine::recordCommandBuffer(uint32_t imageIndex)
 {
     commandBuffers[currentFrame].begin({});
 
-    init::TransitionImageLayout transitionParams = {
+    init::TransitionImageLayout2 transitionParams = {
         .imageIndex = imageIndex,
         .old_layout = vk::ImageLayout::eUndefined,
         .new_layout = vk::ImageLayout::eColorAttachmentOptimal,
@@ -286,7 +290,7 @@ void Engine::recordCommandBuffer(uint32_t imageIndex)
     };
 
     for (auto& swapchainImage : swapChainImages) { transitionParams.swapchainImages.emplace_back(std::ref(swapchainImage)); }
-    init::transitionImageLayout(transitionParams);
+    init::transitionImageLayout2(transitionParams);
 
     vk::ClearValue clearColor = vk::ClearColorValue(0.0f, 0.0f, 0.0f, 1.0f);
     vk::RenderingAttachmentInfo attachmentInfo = {
@@ -325,7 +329,7 @@ void Engine::recordCommandBuffer(uint32_t imageIndex)
     transitionParams.src_stage_mask = vk::PipelineStageFlagBits2::eColorAttachmentOutput;
     transitionParams.dst_stage_mask = vk::PipelineStageFlagBits2::eBottomOfPipe;
 
-    init::transitionImageLayout(transitionParams);
+    init::transitionImageLayout2(transitionParams);
 
     commandBuffers[currentFrame].end();
 
@@ -353,6 +357,43 @@ void Engine::recreateSwapchain()
     createImageViews();
 }
 
+
+void Engine::createTextureImage()
+{
+    int texWidth{}, texHeight{}, texChannels{};
+    stbi_uc* pixels = stbi_load("textures/texture.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    vk::DeviceSize imageSize = texWidth * texHeight * 4;
+
+    init::CreateBuffer bufferInput{ .size = imageSize, .usage = vk::BufferUsageFlagBits::eTransferSrc,
+        .properties = vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent,
+        .buffer = std::ref(stagingBuffer), .bufferMemory = std::ref(stagingBufferMemory), .device = std::ref(device), .physicalDevice = std::ref(physicalDevice) };
+
+    createBuffer(bufferInput);
+
+    void* data = stagingBufferMemory.mapMemory(0, imageSize);
+    memcpy(data, pixels, imageSize);
+    stagingBufferMemory.unmapMemory();
+
+    stbi_image_free(pixels);
+
+    if (!pixels) { throw std::runtime_error("failed to load texture image!"); }
+
+	vk::raii::Image textureImageTemp({});
+	vk::raii::DeviceMemory textureImageMemoryTemp({});
+    init::createImage({ .width = static_cast<uint32_t>(texWidth), .height = static_cast<uint32_t>(texHeight),
+        .format = vk::Format::eR8G8B8A8Srgb, .tiling = vk::ImageTiling::eOptimal, .usage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled,
+        .properties = vk::MemoryPropertyFlagBits::eDeviceLocal, .device = std::ref(device), .physicalDevice = std::ref(physicalDevice),
+        .image = std::ref(textureImageTemp), .imageMemory = std::ref(textureImageMemoryTemp)});
+    textureImage = std::move(textureImageTemp);
+    textureImageMemory = std::move(textureImageMemoryTemp);
+
+    init::transitionImageLayout(
+        { .image = std::ref(textureImage), .old_layout = vk::ImageLayout::eUndefined, .new_layout = vk::ImageLayout::eTransferDstOptimal,
+		.commandPool = std::ref(commandPool), .device = std::ref(device), .graphicsQueue = std::ref(graphicsQueue) });
+    init::copyBufferToImage({
+		 .width = static_cast<uint32_t>(texWidth), .height = static_cast<uint32_t>(texHeight),.buffer = std::ref(stagingBuffer), .image = std::ref(textureImage),
+        .commandPool = std::ref(commandPool), .device = std::ref(device), .graphicsQueue = std::ref(graphicsQueue) });
+}
 
 void Engine::createVertexBuffer()
 {
@@ -433,9 +474,8 @@ void Engine::createUniformBuffers()
         uniformBuffers.emplace_back(std::move(buffer));
         uniformBuffersMemory.emplace_back(std::move(bufferMem));
         uniformBuffersMapped.emplace_back(uniformBuffersMemory[i].mapMemory(0, bufferSize));
-        // persitent mapping
+        // persistent mapping
         // buffer stays mapped to this pointer for the application's whole life
-
         // no use of staging buffer because of the overhead
     }
 }
